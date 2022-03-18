@@ -1,14 +1,14 @@
 # RazorEngine CG - ShadowOM
 Proposal to optimise RazorEngine compilation of templates with multiple OMs
 through introduction of a hidden Shadow OM similar to how Mozilla solved this problem in Web Components.
-```c
+```csharp
 foreach(var type in new [] { typeof(EquipmentPhase), typeof(EquipmentModule) }) {
     Engine.Razor.Compile(template, "templateKey", type);
 }
 ```
 Above approach to solving the multiple entity problem causes long term performance setbacks,
 it seems that drawing inspiration from the ShadowDOM feature might pose to be a precaution to this issue.
-```c
+```csharp
 var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), equipmentPhaseOM);
 ```
 This heavily relies on the type structure being changed obviously, a method to retrieve the specified root is necessary,
