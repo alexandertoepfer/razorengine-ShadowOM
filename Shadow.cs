@@ -29,7 +29,7 @@ public static class Engine {
 // This will be used for dynamic cast redirection to recover classes, it's replacing the
 // missing ObjectModel class without affecting the XML structure of <equipmentPhase>, <equipmentModule>, etc.
 // It's basically a type recovery strategy in place to make compilation faster ;)
-// The idea is to squash objects in memory into a hidden shadow object model for faster compilation
+// The idea is to squash objects in memory into a hidden Shadow OM for faster compilation
 // while being able to easily retrieve the original during runtime of templates.
 public abstract class Shadow {
 	public string type() => AssetType.Name;
@@ -37,7 +37,7 @@ public abstract class Shadow {
 	public virtual dynamic root() => Convert.ChangeType(this, AssetType);
 };
 
-// Current Asset classes with their recovery type implemented for the shadow object model,
+// Current Asset classes with their recovery type implemented for the Shadow OM,
 // the templates can easily retrieve the root again with this information, as highlighted below.
 public class EquipmentPhase : Shadow {
 	sealed protected override Type AssetType { get; } = typeof(EquipmentPhase);
@@ -50,7 +50,7 @@ public class EquipmentModule : Shadow {
 	public string Name { get; init; }
 };
 
-// Proof of concept for ShadowObjectModel class
+// Proof of concept for Shadow OM class
 public class Program {
 	public static void Main() {
 		// The usual ObjectModels from the XML into the classes
