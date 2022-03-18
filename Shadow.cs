@@ -16,13 +16,13 @@ using System.Linq;
 public static class Engine {
 	public static class Razor {
 		public static object RunCompile(string template,
-										string templateKey,
-										Type modelType,
-										object objectModel) => null;
+						string templateKey,
+						Type modelType,
+						object objectModel) => null;
 		
 		public static object Compile(string template,
-									 string templateKey,
-									 Type modelType) => null;
+					     string templateKey,
+					     Type modelType) => null;
 	};
 };
 
