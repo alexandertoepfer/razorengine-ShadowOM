@@ -13,3 +13,5 @@ var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), eq
 ```
 This heavily relies on the type structure being changed obviously, a method to retrieve the specified root is necessary,
 in this case it will be valid for templates, but the core concept still applies.
+
+Take a look into Shadow.cs to see how this was accomplished.
