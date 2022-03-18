@@ -7,7 +7,7 @@ foreach(var type in supportedTypes) {
 }
 ```
 Above approach to solving the multiple entity problem causes long term performance setbacks,
-it seems that the ShadowDOM feature might pose to be a precaution to this issue.
+it seems that drawing inspiration from the ShadowDOM feature might pose to be a precaution to this issue.
 ```c
 Engine.Razor.Compile(template, "templateKey", ShadowOM);
 ```
