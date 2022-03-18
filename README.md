@@ -11,4 +11,4 @@ it seems that Mozialla's ShadowDOM feature might pose to be a precaution to this
 ```c
 Engine.Razor.Compile(template, "templateKey", ShadowOM);
 ```
-This heavily relies on the type structure obviously.
+This heavily relies on the type structure obviously, a method to retrieve the root is necessary.
