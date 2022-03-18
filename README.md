@@ -2,8 +2,7 @@
 Proposal to optimise RazorEngine compilation of templates with multiple OMs
 through introduction of a hidden Shadow OM similar to how Mozilla solved this problem in Web Components.
 ```c
-var supportedTypes = new [] { typeof(EquipmentPhase), typeof(EquipmentModule) };
-foreach(var type in supportedTypes) {
+foreach(var type in new [] { typeof(EquipmentPhase), typeof(EquipmentModule) }) {
     Engine.Razor.Compile(template, "templateKey", type);
 }
 ```
