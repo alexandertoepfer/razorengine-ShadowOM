@@ -34,7 +34,25 @@ public static class Engine {
 public abstract class Shadow {
 	public string type() => AssetType.Name;
 	protected abstract Type AssetType { get; }
+	
+	/// <summary>This method returns the original object.</summary>
 	public virtual dynamic root() => Convert.ChangeType(this, AssetType);
+	
+	/// <summary>This method returns the original object as type T.</summary>
+	/// <typeparam name="T">The type the object will be casted to.</typeparam>
+	public virtual T to<T>() => (T) Convert.ChangeType(this, typeof(T));
+	
+	/// <summary>This method takes a list of models and populates the matching type.</summary>
+	/// <param name="list">The list of possible models.</param>
+	public virtual List<dynamic> to(List<dynamic> list) {
+		for (int i = 0; i < list.Count; i++) {
+			if (list[i].GetType().ToString().Equals(type())) {
+				list[i] = Convert.ChangeType(this, AssetType);
+				break;
+			}
+		}
+		return list;
+	}
 };
 
 // Current Asset classes with their recovery type implemented for the Shadow OM,
@@ -43,11 +61,13 @@ public class EquipmentPhase : Shadow {
 	sealed protected override Type AssetType { get; } = typeof(EquipmentPhase);
 	public string TypeIdentifier { get; } = "PH";
 	public string Name { get; init; }
+	
 };
 public class EquipmentModule : Shadow {
 	sealed protected override Type AssetType { get; } = typeof(EquipmentModule);
 	public string TypeIdentifier { get; } = "EM";
 	public string Name { get; init; }
+	
 };
 
 // Proof of concept for Shadow OM class
@@ -74,17 +94,40 @@ public class Program {
 			@{
 				// Type of Asset depends on what was loaded into memory
 				dynamic Asset = Model.root();
+				
+				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+				// Intellisense support, one model
+				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+				EquipmentPhase Asset = null;
+				try {
+					Asset = Model.to<EquipmentPhase>();
+				} catch (InvalidCastException) {
+					// Type not supported, could be that Model is EquipmentModule
+					// which this template does not support
+				}
+				
+				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+				// Intellisense support, two models
+				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+				var modelList = new List<dynamic> { 
+					new EquipmentPhase(), 
+					new EquipmentModule() 
+				};
+				// Update modelList
+				List<dynamic> updatedList = model.to(modelList);
+
+				// Assign model
+				EquipmentPhase phAsset = updatedList[0];
+				EquipmentModule emAsset = updatedList[1];
 			}
 			<!--
 				@@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
 				@@brief This file contains general information about the asset.
 				Warning! This is a generated file. Manual changes will be omitted.
 			-->
-			@* Now certain code can be executed with only equipmentPhases even *@
-			@switch(Model.type()) {
-				case ""equipmentPhase"":
-					// Do something with equipmentPhase specific data
-					break;
+			@* Now certain code can be executed with only equipmentPhases or equipmentModules *@
+			@if (Model.type().Contains(""EquipmentPhase"")) {
+				// Do something with equipmentPhase specific data
 			}
 		";
 		
@@ -101,7 +144,9 @@ public class Program {
 		// Given types from the specifications as expected
 		Console.WriteLine(types.Aggregate((i, j) => i + "," + j));
 		
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Given values from the specifications as expected :)
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		Console.WriteLine($@"
 		<!--
 			@file {phRoot.TypeIdentifier}_{phRoot.Name}_Info.log
@@ -112,6 +157,50 @@ public class Program {
 		Console.WriteLine($@"
 		<!--
 			@file {emRoot.TypeIdentifier}_{emRoot.Name}_Info.log
+			@brief This file contains general information about the asset.
+			Warning! This is a generated file. Manual changes will be omitted.
+		-->
+		");
+		
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		// Examples with strong typed variable, Intellisense
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		EquipmentPhase phIntelli = null;
+		var model = roots[0]; // Example Model
+		try {
+			phIntelli = model.to<EquipmentPhase>();
+		} catch (InvalidCastException) {
+			// Type not supported, could be that Model is EquipmentModule
+		}
+		
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		// Examples with strong typed variable, both models, Intellisense
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		var modelList = new List<dynamic> { 
+			new EquipmentPhase(), 
+			new EquipmentModule() 
+		};
+		model = roots[1]; // Example Model
+		// Update modelList and write object
+		List<dynamic> updatedList = model.to(modelList);
+		
+		// Assign model
+		phIntelli = updatedList[0];
+		EquipmentModule emIntelli = updatedList[1];
+		
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		// Given values from the specifications as expected :)
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		Console.WriteLine($@"
+		<!--
+			@file {phIntelli.TypeIdentifier}_{phIntelli.Name}_Info.log
+			@brief This file contains general information about the asset.
+			Warning! This is a generated file. Manual changes will be omitted.
+		-->
+		");
+		Console.WriteLine($@"
+		<!--
+			@file {emIntelli.TypeIdentifier}_{emIntelli.Name}_Info.log
 			@brief This file contains general information about the asset.
 			Warning! This is a generated file. Manual changes will be omitted.
 		-->
