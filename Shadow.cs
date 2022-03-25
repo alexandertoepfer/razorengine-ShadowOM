@@ -32,26 +32,30 @@ public static class Engine {
 // The idea is to squash objects in memory into a hidden Shadow OM for faster compilation
 // while being able to easily retrieve the original during runtime of templates.
 public abstract class Shadow {
-	public string type() => AssetType.Name;
+	public string Type() => AssetType.Name;
 	protected abstract Type AssetType { get; }
 	
 	/// <summary>This method returns the original object.</summary>
-	public virtual dynamic root() => Convert.ChangeType(this, AssetType);
+	public virtual dynamic Root() => Convert.ChangeType(this, AssetType);
 	
 	/// <summary>This method returns the original object as type T.</summary>
 	/// <typeparam name="T">The type the object will be casted to.</typeparam>
-	public virtual T to<T>() => (T) Convert.ChangeType(this, typeof(T));
+	public virtual T To<T>() => (T) Convert.ChangeType(this, typeof(T));
 	
 	/// <summary>This method takes a list of models and populates the matching type.</summary>
 	/// <param name="list">The list of possible models.</param>
-	public virtual List<dynamic> to(List<dynamic> list) {
+	public virtual List<dynamic> Fit(List<Type> list) {
+		var results = new List<dynamic>(list.Count);
+		foreach (var type in list) {
+			results.Add(Activator.CreateInstance(type));
+		}
 		for (int i = 0; i < list.Count; i++) {
-			if (list[i].GetType().ToString().Equals(type())) {
-				list[i] = Convert.ChangeType(this, AssetType);
+			if (list[i].Name.Contains(Type())) {
+				results[i] = Convert.ChangeType(this, AssetType);
 				break;
 			}
 		}
-		return list;
+		return results;
 	}
 };
 
@@ -81,10 +85,10 @@ public class Program {
 		var shadows = new [] { (ph as Shadow), (em as Shadow) };
 		
 		// The root objects which have been specified originally
-		List<dynamic> roots = shadows.Select(m => m.root()).ToList();
+		List<dynamic> roots = shadows.Select(m => m.Root()).ToList();
 		
 		// The root classes of the specifications
-		var types = shadows.Select(m => m.type());
+		var types = shadows.Select(m => m.Type());
 		
 		// How it would work inside a template:
 		string template = @"
@@ -109,9 +113,9 @@ public class Program {
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 				// Intellisense support, two models
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-				var modelList = new List<dynamic> { 
-					new EquipmentPhase(), 
-					new EquipmentModule() 
+				var modelList = new List<Type> { 
+					typeof(EquipmentPhase), 
+					typeof(EquipmentModule)
 				};
 				// Update modelList
 				List<dynamic> updatedList = model.to(modelList);
@@ -168,7 +172,7 @@ public class Program {
 		EquipmentPhase phIntelli = null;
 		var model = roots[0]; // Example Model
 		try {
-			phIntelli = model.to<EquipmentPhase>();
+			phIntelli = model.To<EquipmentPhase>();
 		} catch (InvalidCastException) {
 			// Type not supported, could be that Model is EquipmentModule
 		}
@@ -176,13 +180,13 @@ public class Program {
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Examples with strong typed variable, both models, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		var modelList = new List<dynamic> { 
-			new EquipmentPhase(), 
-			new EquipmentModule() 
+		var modelList = new List<Type> { 
+			typeof(EquipmentPhase), 
+			typeof(EquipmentModule)
 		};
 		model = roots[1]; // Example Model
 		// Update modelList and write object
-		List<dynamic> updatedList = model.to(modelList);
+		List<dynamic> updatedList = model.Fit(modelList);
 		
 		// Assign model
 		//EquipmentPhase phIntelli = updatedList[0];
