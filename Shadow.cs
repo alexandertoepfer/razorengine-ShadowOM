@@ -185,7 +185,7 @@ public class Program {
 		List<dynamic> updatedList = model.to(modelList);
 		
 		// Assign model
-		phIntelli = updatedList[0];
+		//EquipmentPhase phIntelli = updatedList[0];
 		EquipmentModule emIntelli = updatedList[1];
 		
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
