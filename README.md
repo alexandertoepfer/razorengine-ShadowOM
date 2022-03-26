@@ -20,14 +20,14 @@ string template = @""
     @using System;
     @{
         // Type of Asset depends on what was loaded into memory
-        dynamic Asset = Model.root();
+        dynamic Asset = Model.Root();
 
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         // Intellisense support, one model
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         EquipmentPhase Asset = null;
         try {
-            Asset = Model.to<EquipmentPhase>();
+            Asset = Model.To<EquipmentPhase>();
         } catch (InvalidCastException) {
             // Type not supported, could be that Model is EquipmentModule
             // which this template does not support
@@ -41,7 +41,7 @@ string template = @""
             typeof(EquipmentModule)
         };
         // Update modelList
-        List<dynamic> updatedList = Model.to(modelList);
+        List<dynamic> updatedList = Model.Fit(modelList);
         // Assign model
         EquipmentPhase phAsset = updatedList[0];
         EquipmentModule emAsset = updatedList[1];
