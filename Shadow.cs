@@ -103,54 +103,6 @@ public class Program {
 		// The root classes of the specifications
 		var types = shadows.Select(m => m.Type());
 		
-		// How it would work inside a template:
-		string template = @"
-			@using Specifications;
-			@inherits Razor.TemplateBase<Shadow>
-			@using System;
-			@{
-				// Type of Asset depends on what was loaded into memory
-				dynamic Asset = Model.Root();
-
-				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-				// Intellisense support, one model
-				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-				EquipmentPhase? phAsset = null;
-
-				try {
-					phAsset = Model.To<EquipmentPhase>();
-				} catch (InvalidCastException) {
-					// Type not supported, could be that Model is EquipmentModule
-					// model.To<EquipmentModule>();
-				}
-
-				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-				// Intellisense support, two models
-				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-				EquipmentPhase? phAsset = null;
-				EquipmentModule? emAsset = null;
-				
-				// Get strong typed objects from model
-				var nvdModelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
-
-				// Assign model
-				phAsset = nvdModelSet[""EquipmentPhase""];
-				emAsset = nvdModelSet[""EquipmentModule""];
-			}
-			<!--
-			@@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
-			@@brief This file contains general information about the asset.
-			Warning! This is a generated file. Manual changes will be omitted.
-			-->
-			@* Now certain code can be executed with only equipmentPhases or equipmentModules *@
-			@if (Model.Is(typeof(EquipmentPhase))) {
-				// Do something with equipmentPhase specific data
-			}
-			@if (Model.Is(typeof(EquipmentModule))) {
-				// Do something with equipmentModule specific data
-			}
-		";
-		
 		// Usual required calls to Razor with a template supporting both asset types without Shadow
 		Engine.Razor.Compile(template, "templateKey", typeof(EquipmentModule));
 		Engine.Razor.Compile(template, "templateKey", typeof(EquipmentPhase));
