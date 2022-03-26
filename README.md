@@ -52,7 +52,7 @@ string template = @""
         @@brief This file contains general information about the asset.
         Warning! This is a generated file. Manual changes will be omitted.
     -->
-    @* Now certain code can be executed with only equipmentPhases or equipmentModules *@
+    @* Now certain code can be executed depending on what model was loaded *@
     @if (Model.type().Contains(""EquipmentPhase"")) {
         // Do something with equipmentPhase specific data
     }
