@@ -26,19 +26,16 @@ string template = @""
     @{
         // Type of Asset depends on what was loaded into memory
         dynamic Asset = Model.Root();
-
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         // Intellisense support, one model
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         EquipmentPhase? phIntelli = null;
-
         try {
             phIntelli = Model.To<EquipmentPhase>();
         } catch (InvalidCastException) {
             // Type not supported, could be that Model is EquipmentModule
             // Model.To<EquipmentModule>();
         }
-
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         // Intellisense support, two models
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -47,10 +44,9 @@ string template = @""
 
         // Get strong typed objects from model
         var modelSet = Model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
-
         // Assign model
-        phIntelli2 = modelSet.GetValueOrDefault(""EquipmentPhase"", null);
-        emIntelli = modelSet.GetValueOrDefault(""EquipmentModule"", null);
+        phIntelli = modelSet[""EquipmentPhase""];
+        emIntelli = modelSet[""EquipmentModule""];
     }
     <!--
     @@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
@@ -58,10 +54,10 @@ string template = @""
     Warning! This is a generated file. Manual changes will be omitted.
     -->
     @* Now certain code can be executed with only equipmentPhases or equipmentModules *@
-    @if (Model.type().Contains(""EquipmentPhase"")) {
+    @if (Model.type().Contains(""EquipmentPhase"") && phIntelli != null) {
         // Do something with equipmentPhase specific data
     }
-    @if (Model.type().Contains(""EquipmentModule"")) {
+    @if (Model.type().Contains(""EquipmentModule"") && emIntelli != null) {
         // Do something with equipmentModule specific data
     }
 "";
