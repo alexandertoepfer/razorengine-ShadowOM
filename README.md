@@ -41,22 +41,28 @@ string template = @""
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         // Intellisense support, two models
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        var modelTypes = new List<Type> { 
+        var viableModels = new List<Type> { 
             typeof(EquipmentPhase), 
             typeof(EquipmentModule)
         };
 
         // Get strong typed objects from model
-        var viableModels = Model.In(modelTypes);
+        var filledModels = Model.In(viableModels);
 
         // Assign model(s)
         EquipmentPhase phIntelli = null;
-        EquipmentModule emIntelli = viableModels[""EquipmentModule""];
+        EquipmentModule emIntelli = null;
         try {
-            phIntelli = viableModels[""EquipmentPhase""];
+            phIntelli = filledModels[""EquipmentPhase""];
         } catch (KeyNotFoundException) {
             // Type not supported, could be that Model is EquipmentModule
             // Model.In(modelTypes)[""EquipmentModule""];
+        }
+        try {
+            emIntelli = filledModels[""EquipmentModule""];
+        } catch (KeyNotFoundException) {
+            // Type not supported, could be that Model is EquipmentPhase
+            // Model.In(modelTypes)[""EquipmentPhase""];
         }
     }
     <!--
