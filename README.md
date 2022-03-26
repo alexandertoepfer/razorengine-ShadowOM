@@ -54,6 +54,7 @@ string template = @""
         EquipmentModule emIntelli = null;
         try {
             phIntelli = filledModels[""EquipmentPhase""];
+            emIntelli = filledModels[""EquipmentModule""];
         } catch (KeyNotFoundException) {
             // Type not supported, could be that Model is EquipmentModule
             // Model.In(modelTypes)[""EquipmentModule""];
