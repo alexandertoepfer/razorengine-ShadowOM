@@ -14,7 +14,7 @@ var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), eq
 This heavily relies on the type structure being changed obviously, a method to retrieve the specified root is necessary,
 in this case it will be valid for templates, but the core concept still applies. 
 
->Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/bn2hpF
+>Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/fFZXhK
 
 A template making use of the ShadowOM
 would look like this depending what model types it processes:
@@ -30,41 +30,27 @@ string template = @""
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         // Intellisense support, one model
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        EquipmentPhase Asset = null;
+        EquipmentPhase? phIntelli = null;
+
         try {
-            Asset = Model.To<EquipmentPhase>();
+            phIntelli = model.To<EquipmentPhase>();
         } catch (InvalidCastException) {
             // Type not supported, could be that Model is EquipmentModule
-            // which this template does not support
+            // model.To<EquipmentModule>();
         }
 
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         // Intellisense support, two models
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        var viableModels = new List<Type> { 
-            typeof(EquipmentPhase), 
-            typeof(EquipmentModule)
-        };
+        EquipmentPhase? phIntelli = null;
+        EquipmentModule? emIntelli = null;
 
         // Get strong typed objects from model
-        var filledModels = Model.In(viableModels);
+        var modelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
 
-        // Assign model(s)
-        EquipmentPhase phIntelli = null;
-        EquipmentModule emIntelli = null;
-        try {
-            phIntelli = filledModels[""EquipmentPhase""];
-            emIntelli = filledModels[""EquipmentModule""];
-        } catch (KeyNotFoundException) {
-            // Type not supported, could be that Model is EquipmentModule
-            // Model.In(modelTypes)[""EquipmentModule""];
-        }
-        try {
-            emIntelli = filledModels[""EquipmentModule""];
-        } catch (KeyNotFoundException) {
-            // Type not supported, could be that Model is EquipmentPhase
-            // Model.In(modelTypes)[""EquipmentPhase""];
-        }
+        // Assign model
+        phIntelli2 = modelSet.GetValueOrDefault(""EquipmentPhase"", null);
+        emIntelli = modelSet.GetValueOrDefault(""EquipmentModule"", null);
     }
     <!--
     @@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
