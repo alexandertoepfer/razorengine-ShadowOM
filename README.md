@@ -41,7 +41,7 @@ string template = @""
             typeof(EquipmentModule)
         };
         // Update modelList
-        List<dynamic> updatedList = model.to(modelList);
+        List<dynamic> updatedList = Model.to(modelList);
         // Assign model
         EquipmentPhase phAsset = updatedList[0];
         EquipmentModule emAsset = updatedList[1];
