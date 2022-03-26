@@ -103,6 +103,8 @@ public class Program {
 		// The root classes of the specifications
 		var types = shadows.Select(m => m.Type());
 		
+		var template = "";
+		
 		// Usual required calls to Razor with a template supporting both asset types without Shadow
 		Engine.Razor.Compile(template, "templateKey", typeof(EquipmentModule));
 		Engine.Razor.Compile(template, "templateKey", typeof(EquipmentPhase));
