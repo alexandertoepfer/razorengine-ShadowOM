@@ -47,20 +47,21 @@ public abstract class Shadow {
 	public string Type() => AssetType.Name;
 	protected abstract Type AssetType { get; }
 	
-	/// <summary>This method returns the original object.</summary>
+	// This method returns the original object.
 	public virtual dynamic Root() => Convert.ChangeType(this, AssetType);
 	
-	/// <summary>This method returns the original object as type T.</summary>
-	/// <typeparam name="T">The type the object will be casted to.</typeparam>
+	// This method returns the original object as type T.
 	public virtual T To<T>() => (T) Convert.ChangeType(this, typeof(T));
 	
-	/// <summary>This method takes a list of models and populates the matching type.</summary>
-	/// <param name="list">The list of possible models.</param>
+	// This method can be used for model type checking.
+	public virtual bool Is(Type type) => type == AssetType;
+	
+	// This method takes a list of model types and populates the matching type.
 	public virtual NullValueDictionary<String,dynamic> In(Type[] list) {
 		var results = new NullValueDictionary<String,dynamic>();
 		foreach (var item in list)
 		{
-			if (item.Name.Contains(Type())) {
+			if (Is(item)) {
 				var instance = Activator.CreateInstance(item);
 				instance = this.Root();
 				results.Add(item.Name, instance);
@@ -114,27 +115,27 @@ public class Program {
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 				// Intellisense support, one model
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-				EquipmentPhase? phIntelli = null;
+				EquipmentPhase? phAsset = null;
 
 				try {
-					phIntelli = Model.To<EquipmentPhase>();
+					phAsset = Model.To<EquipmentPhase>();
 				} catch (InvalidCastException) {
 					// Type not supported, could be that Model is EquipmentModule
-					// Model.To<EquipmentModule>();
+					// model.To<EquipmentModule>();
 				}
 
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 				// Intellisense support, two models
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-				EquipmentPhase? phIntelli = null;
-				EquipmentModule? emIntelli = null;
+				EquipmentPhase? phAsset = null;
+				EquipmentModule? emAsset = null;
 				
 				// Get strong typed objects from model
-				var modelSet = Model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
+				var nvdModelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
 
 				// Assign model
-				phIntelli = modelSet[""EquipmentPhase""];
-				emIntelli = modelSet[""EquipmentModule""];
+				phAsset = nvdModelSet[""EquipmentPhase""];
+				emAsset = nvdModelSet[""EquipmentModule""];
 			}
 			<!--
 			@@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
@@ -142,10 +143,10 @@ public class Program {
 			Warning! This is a generated file. Manual changes will be omitted.
 			-->
 			@* Now certain code can be executed with only equipmentPhases or equipmentModules *@
-			@if (Model.type().Contains(""EquipmentPhase"")) {
+			@if (Model.Is(typeof(EquipmentPhase))) {
 				// Do something with equipmentPhase specific data
 			}
-			@if (Model.type().Contains(""EquipmentModule"")) {
+			@if (Model.Is(typeof(EquipmentModule))) {
 				// Do something with equipmentModule specific data
 			}
 		";
@@ -184,11 +185,11 @@ public class Program {
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Examples with strong typed variable, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		EquipmentPhase? phIntelli = null;
 		var model = shadows[0]; // Example Model
+		EquipmentPhase? phAsset = null;
 		
 		try {
-			phIntelli = model.To<EquipmentPhase>();
+			phAsset = model.To<EquipmentPhase>();
 		} catch (InvalidCastException) {
 			// Type not supported, could be that Model is EquipmentModule
 			// model.To<EquipmentModule>();
@@ -200,25 +201,25 @@ public class Program {
 		model = shadows[1]; // Example Model
 		
 		// Get strong typed objects from model
-		var modelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
-		
+		var nvdModelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
+
 		// Assign model
-		EquipmentPhase? phIntelli2 = modelSet["EquipmentPhase"];
-		EquipmentModule? emIntelli = modelSet["EquipmentModule"];
+		//EquipmentPhase? phAsset = nvdModelSet["EquipmentPhase"];
+		EquipmentModule? emAsset = nvdModelSet["EquipmentModule"];
 		
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Given values from the specifications as expected :)
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		Console.WriteLine($@"
 		<!--
-			@file {phIntelli.TypeIdentifier}_{phIntelli.Name}_Info.log
+			@file {phAsset.TypeIdentifier}_{phAsset.Name}_Info.log
 			@brief This file contains general information about the asset.
 			Warning! This is a generated file. Manual changes will be omitted.
 		-->
 		");
 		Console.WriteLine($@"
 		<!--
-			@file {emIntelli.TypeIdentifier}_{emIntelli.Name}_Info.log
+			@file {emAsset.TypeIdentifier}_{emAsset.Name}_Info.log
 			@brief This file contains general information about the asset.
 			Warning! This is a generated file. Manual changes will be omitted.
 		-->
