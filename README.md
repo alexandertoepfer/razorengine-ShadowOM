@@ -46,7 +46,7 @@ string template = @""
         EquipmentModule? emAsset = null;
 
         // Get strong typed objects from model
-        var nvdModelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
+        var nvdModelSet = Model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
 
         // Assign model
         phAsset = nvdModelSet[""EquipmentPhase""];
