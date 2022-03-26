@@ -44,8 +44,8 @@ public abstract class Shadow {
 	
 	/// <summary>This method takes a list of models and populates the matching type.</summary>
 	/// <param name="list">The list of possible models.</param>
-	public virtual Dictionary<String,dynamic> In(Type[] list) {
-		var results = new Dictionary<String,dynamic>();
+	public virtual Dictionary<String, dynamic> In(Type[] list) {
+		var results = new Dictionary<String, dynamic>();
 		foreach (var item in list)
 		{
 			if (item.Name.Contains(Type())) {
