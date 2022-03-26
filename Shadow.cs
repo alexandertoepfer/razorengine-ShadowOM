@@ -44,15 +44,14 @@ public abstract class Shadow {
 	
 	/// <summary>This method takes a list of models and populates the matching type.</summary>
 	/// <param name="list">The list of possible models.</param>
-	public virtual List<dynamic> Fit(List<Type> list) {
-		var results = new List<dynamic>(list.Count);
-		foreach (var type in list) {
-			results.Add(Activator.CreateInstance(type));
-		}
+	public virtual Dictionary<String,dynamic> In(List<Type> list) {
+		var results = new Dictionary<String,dynamic>(list.Count);
 		foreach (var item in list.Select((type, i) => new { i, type }))
 		{
 			if (item.type.Name.Contains(Type())) {
-				results[item.i] = Convert.ChangeType(this, AssetType);
+				var inst = Activator.CreateInstance(item.type);
+				inst = Convert.ChangeType(this, AssetType);
+				results[item.type.Name] = inst;
 				break;
 			}
 		}
@@ -114,15 +113,22 @@ public class Program {
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 				// Intellisense support, two models
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-				var modelList = new List<Type> { 
+				var modelTypes = new List<Type> { 
 					typeof(EquipmentPhase), 
 					typeof(EquipmentModule)
 				};
-				// Update modelList
-				List<dynamic> updatedList = Model.Fit(modelList);
-				// Assign model
-				EquipmentPhase phAsset = updatedList[0];
-				EquipmentModule emAsset = updatedList[1];
+
+				// Get strong typed objects from model
+				//var viableModels = Model.In(modelTypes);
+
+				// Assign model(s)
+				//EquipmentPhase phIntelli = Model.In(modelTypes)[""EquipmentPhase""];
+				try {
+					EquipmentModule emIntelli = Model.In(modelTypes)[""EquipmentModule""];
+				} catch (KeyNotFoundException) {
+					// Type not supported, could be that Model is EquipmentPhase
+					// Model.In(modelTypes)[""EquipmentPhase""];
+				}
 			}
 			<!--
 			@@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
@@ -178,22 +184,30 @@ public class Program {
 			phIntelli = model.To<EquipmentPhase>();
 		} catch (InvalidCastException) {
 			// Type not supported, could be that Model is EquipmentModule
+			// model.To<EquipmentModule>();
 		}
 		
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Examples with strong typed variable, both models, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		var modelList = new List<Type> { 
+		var modelTypes = new List<Type> { 
 			typeof(EquipmentPhase), 
 			typeof(EquipmentModule)
 		};
 		model = shadows[1]; // Example Model
-		// Update modelList and write object
-		List<dynamic> updatedList = model.Fit(modelList);
+		
+		// Get strong typed objects from model
+		//var viableModels = model.In(modelTypes);
 		
 		// Assign model
-		//EquipmentPhase phIntelli = updatedList[0];
-		EquipmentModule emIntelli = updatedList[1];
+		//EquipmentPhase phIntelli = model.In(modelTypes)["EquipmentPhase"];
+		EquipmentModule emIntelli = null;
+		try {
+			emIntelli = model.In(modelTypes)["EquipmentModule"];
+		} catch (KeyNotFoundException) {
+			// Type not supported, could be that Model is EquipmentPhase
+			// model.In(modelTypes)["EquipmentPhase"];
+		}
 		
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Given values from the specifications as expected :)
