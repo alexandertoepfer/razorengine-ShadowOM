@@ -44,8 +44,10 @@ public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class {
 // The idea is to squash objects in memory into a hidden Shadow OM for faster compilation
 // while being able to easily retrieve the original during runtime of templates.
 public abstract class Shadow {
-	public string Type() => AssetType.Name;
 	protected abstract Type AssetType { get; }
+	
+	// This method returns the type as string.
+	public string Type() => AssetType.Name;
 	
 	// This method returns the original object.
 	public dynamic Root() => Convert.ChangeType(this, AssetType);
@@ -53,12 +55,12 @@ public abstract class Shadow {
 	// This method returns the original object as type T.
 	public T To<T>() => (T) Convert.ChangeType(this, typeof(T));
 	
-	// This method can be used for model type checking.
+	// This method can be used for type checking.
 	public bool Is(Type type) => type == AssetType;
 	
 	// This method takes a list of model types and populates the matching type.
-	public NullValueDictionary<String,dynamic> In(Type[] list) {
-		var results = new NullValueDictionary<String,dynamic>();
+	public NullValueDictionary<String, dynamic> In(Type[] list) {
+		var results = new NullValueDictionary<String, dynamic>();
 		foreach (var item in list)
 		{
 			if (Is(item)) {
@@ -95,7 +97,7 @@ public class Program {
 		var em = new EquipmentModule { Name = "ControlDoV001" };
 		
 		// The generic compilation type used for razor, alias the models
-		var shadows = new [] { (ph as Shadow), (em as Shadow) };
+		Shadow[] shadows = new [] { (ph as Shadow), (em as Shadow) };
 		
 		// The root objects which have been specified originally
 		List<dynamic> roots = shadows.Select(m => m.Root()).ToList();
