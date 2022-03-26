@@ -117,10 +117,10 @@ public class Program {
 				EquipmentPhase? phIntelli = null;
 
 				try {
-					phIntelli = model.To<EquipmentPhase>();
+					phIntelli = Model.To<EquipmentPhase>();
 				} catch (InvalidCastException) {
 					// Type not supported, could be that Model is EquipmentModule
-					// model.To<EquipmentModule>();
+					// Model.To<EquipmentModule>();
 				}
 
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -130,7 +130,7 @@ public class Program {
 				EquipmentModule? emIntelli = null;
 				
 				// Get strong typed objects from model
-				var modelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
+				var modelSet = Model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
 
 				// Assign model
 				phIntelli = modelSet[""EquipmentPhase""];
