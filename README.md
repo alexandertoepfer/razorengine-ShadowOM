@@ -47,15 +47,16 @@ string template = @""
         };
 
         // Get strong typed objects from model
-        //var viableModels = Model.In(modelTypes);
+        var viableModels = Model.In(modelTypes);
 
         // Assign model(s)
-        //EquipmentPhase phIntelli = Model.In(modelTypes)[""EquipmentPhase""];
+        EquipmentPhase phIntelli = null;
+        EquipmentModule emIntelli = viableModels[""EquipmentModule""];
         try {
-            EquipmentModule emIntelli = Model.In(modelTypes)[""EquipmentModule""];
+            phIntelli = viableModels[""EquipmentPhase""];
         } catch (KeyNotFoundException) {
-            // Type not supported, could be that Model is EquipmentPhase
-            // Model.In(modelTypes)[""EquipmentPhase""];
+            // Type not supported, could be that Model is EquipmentModule
+            // Model.In(modelTypes)[""EquipmentModule""];
         }
     }
     <!--
