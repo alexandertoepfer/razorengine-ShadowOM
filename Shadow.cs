@@ -173,7 +173,7 @@ public class Program {
 		// Examples with strong typed variable, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		EquipmentPhase phIntelli = null;
-		var model = roots[0]; // Example Model
+		var model = shadows[0]; // Example Model
 		try {
 			phIntelli = model.To<EquipmentPhase>();
 		} catch (InvalidCastException) {
@@ -187,7 +187,7 @@ public class Program {
 			typeof(EquipmentPhase), 
 			typeof(EquipmentModule)
 		};
-		model = roots[1]; // Example Model
+		model = shadows[1]; // Example Model
 		// Update modelList and write object
 		List<dynamic> updatedList = model.Fit(modelList);
 		
