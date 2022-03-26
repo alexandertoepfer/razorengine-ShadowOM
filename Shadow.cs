@@ -26,6 +26,18 @@ public static class Engine {
 	};
 };
 
+// NullValueDictionary class to directly assign nullables after look-up and 
+// avoid stuff like Dict.ContainsKey(...)? Dict[...] : null and KeyNotFoundException
+// when we want to have null entries for not populated OMs.
+public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class {
+    new public U this[T key] {
+		get {
+            this.TryGetValue(key, out var val);
+            return val;
+        }
+    }
+}
+
 // This will be used for dynamic cast redirection to recover classes, it's replacing the
 // missing ObjectModel class without affecting the XML structure of <equipmentPhase>, <equipmentModule>, etc.
 // It's basically a type recovery strategy in place to make compilation faster ;)
@@ -44,14 +56,14 @@ public abstract class Shadow {
 	
 	/// <summary>This method takes a list of models and populates the matching type.</summary>
 	/// <param name="list">The list of possible models.</param>
-	public virtual Dictionary<String, dynamic> In(Type[] list) {
-		var results = new Dictionary<String, dynamic>();
+	public virtual NullValueDictionary<String,dynamic> In(Type[] list) {
+		var results = new NullValueDictionary<String,dynamic>();
 		foreach (var item in list)
 		{
 			if (item.Name.Contains(Type())) {
 				var instance = Activator.CreateInstance(item);
 				instance = this.Root();
-				results[item.Name] = instance;
+				results.Add(item.Name, instance);
 				break;
 			}
 		}
@@ -121,8 +133,8 @@ public class Program {
 				var modelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
 
 				// Assign model
-				phIntelli2 = modelSet.GetValueOrDefault(""EquipmentPhase"", null);
-				emIntelli = modelSet.GetValueOrDefault(""EquipmentModule"", null);
+				phIntelli = modelSet[""EquipmentPhase""];
+				emIntelli = modelSet[""EquipmentModule""];
 			}
 			<!--
 			@@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
@@ -191,8 +203,8 @@ public class Program {
 		var modelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
 		
 		// Assign model
-		EquipmentPhase? phIntelli2 = modelSet.GetValueOrDefault("EquipmentPhase", null);
-		EquipmentModule? emIntelli = modelSet.GetValueOrDefault("EquipmentModule", null);
+		EquipmentPhase? phIntelli2 = modelSet["EquipmentPhase"];
+		EquipmentModule? emIntelli = modelSet["EquipmentModule"];
 		
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Given values from the specifications as expected :)
