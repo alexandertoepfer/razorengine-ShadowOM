@@ -55,6 +55,9 @@ string template = @""
     @if (Model.type().Contains(""EquipmentPhase"")) {
         // Do something with equipmentPhase specific data
     }
+    @if (Model.type().Contains(""EquipmentModule"")) {
+        // Do something with equipmentModule specific data
+    }
 "";
 ```
 >Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/XAkTZm
