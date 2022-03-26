@@ -48,16 +48,16 @@ public abstract class Shadow {
 	protected abstract Type AssetType { get; }
 	
 	// This method returns the original object.
-	public virtual dynamic Root() => Convert.ChangeType(this, AssetType);
+	public dynamic Root() => Convert.ChangeType(this, AssetType);
 	
 	// This method returns the original object as type T.
-	public virtual T To<T>() => (T) Convert.ChangeType(this, typeof(T));
+	public T To<T>() => (T) Convert.ChangeType(this, typeof(T));
 	
 	// This method can be used for model type checking.
-	public virtual bool Is(Type type) => type == AssetType;
+	public bool Is(Type type) => type == AssetType;
 	
 	// This method takes a list of model types and populates the matching type.
-	public virtual NullValueDictionary<String,dynamic> In(Type[] list) {
+	public NullValueDictionary<String,dynamic> In(Type[] list) {
 		var results = new NullValueDictionary<String,dynamic>();
 		foreach (var item in list)
 		{
