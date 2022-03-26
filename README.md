@@ -12,7 +12,11 @@ it seems that drawing inspiration from the ShadowDOM feature might pose to be a 
 var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), equipmentPhaseOM);
 ```
 This heavily relies on the type structure being changed obviously, a method to retrieve the specified root is necessary,
-in this case it will be valid for templates, but the core concept still applies. A template making use of the ShadowOM
+in this case it will be valid for templates, but the core concept still applies. 
+
+>Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/wJTS9F
+
+A template making use of the ShadowOM
 would look like this depending what model types it processes:
 ```csharp
 string template = @""
@@ -61,4 +65,3 @@ string template = @""
     }
 "";
 ```
->Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/wJTS9F
