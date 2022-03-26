@@ -92,24 +92,24 @@ public class Program {
 		
 		// How it would work inside a template:
 		string template = @"
-			@using ...Specifications;
-			@inherits ...RazorTemplateBase<Shadow>
+			@using Specifications;
+			@inherits Razor.TemplateBase<Shadow>
 			@using System;
 			@{
 				// Type of Asset depends on what was loaded into memory
-				dynamic Asset = Model.root();
-				
+				dynamic Asset = Model.Root();
+
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 				// Intellisense support, one model
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 				EquipmentPhase Asset = null;
 				try {
-					Asset = Model.to<EquipmentPhase>();
+					Asset = Model.To<EquipmentPhase>();
 				} catch (InvalidCastException) {
 					// Type not supported, could be that Model is EquipmentModule
 					// which this template does not support
 				}
-				
+
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 				// Intellisense support, two models
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -118,20 +118,22 @@ public class Program {
 					typeof(EquipmentModule)
 				};
 				// Update modelList
-				List<dynamic> updatedList = model.to(modelList);
-
+				List<dynamic> updatedList = Model.Fit(modelList);
 				// Assign model
 				EquipmentPhase phAsset = updatedList[0];
 				EquipmentModule emAsset = updatedList[1];
 			}
 			<!--
-				@@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
-				@@brief This file contains general information about the asset.
-				Warning! This is a generated file. Manual changes will be omitted.
+			@@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
+			@@brief This file contains general information about the asset.
+			Warning! This is a generated file. Manual changes will be omitted.
 			-->
 			@* Now certain code can be executed with only equipmentPhases or equipmentModules *@
 			@if (Model.type().Contains(""EquipmentPhase"")) {
 				// Do something with equipmentPhase specific data
+			}
+			@if (Model.type().Contains(""EquipmentModule"")) {
+				// Do something with equipmentModule specific data
 			}
 		";
 		
