@@ -49,9 +49,10 @@ public abstract class Shadow {
 		foreach (var type in list) {
 			results.Add(Activator.CreateInstance(type));
 		}
-		for (int i = 0; i < list.Count; i++) {
-			if (list[i].Name.Contains(Type())) {
-				results[i] = Convert.ChangeType(this, AssetType);
+		foreach (var item in list.Select((type, i) => new { i, type }))
+		{
+			if (item.type.Name.Contains(Type())) {
+				results[item.i] = Convert.ChangeType(this, AssetType);
 				break;
 			}
 		}
