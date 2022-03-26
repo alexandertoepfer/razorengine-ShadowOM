@@ -27,9 +27,9 @@ string template = @""
         // Type of Asset depends on what was loaded into memory
         dynamic Asset = Model.Root();
 
-        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         // Intellisense support, one model
-        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         EquipmentPhase Asset = null;
         try {
             Asset = Model.To<EquipmentPhase>();
@@ -38,25 +38,32 @@ string template = @""
             // which this template does not support
         }
 
-        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         // Intellisense support, two models
-        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        var modelList = new List<Type> { 
+        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+        var modelTypes = new List<Type> { 
             typeof(EquipmentPhase), 
             typeof(EquipmentModule)
         };
-        // Update modelList
-        List<dynamic> updatedList = Model.Fit(modelList);
-        // Assign model
-        EquipmentPhase phAsset = updatedList[0];
-        EquipmentModule emAsset = updatedList[1];
+
+        // Get strong typed objects from model
+        //var viableModels = Model.In(modelTypes);
+
+        // Assign model(s)
+        //EquipmentPhase phIntelli = Model.In(modelTypes)[""EquipmentPhase""];
+        try {
+            EquipmentModule emIntelli = Model.In(modelTypes)[""EquipmentModule""];
+        } catch (KeyNotFoundException) {
+            // Type not supported, could be that Model is EquipmentPhase
+            // Model.In(modelTypes)[""EquipmentPhase""];
+        }
     }
     <!--
-        @@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
-        @@brief This file contains general information about the asset.
-        Warning! This is a generated file. Manual changes will be omitted.
+    @@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
+    @@brief This file contains general information about the asset.
+    Warning! This is a generated file. Manual changes will be omitted.
     -->
-    @* Now certain code can be executed depending on what model was loaded *@
+    @* Now certain code can be executed with only equipmentPhases or equipmentModules *@
     @if (Model.type().Contains(""EquipmentPhase"")) {
         // Do something with equipmentPhase specific data
     }
