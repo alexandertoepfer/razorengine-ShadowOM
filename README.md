@@ -30,6 +30,7 @@ string template = @""
         // Intellisense support, one model
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         EquipmentPhase? phIntelli = null;
+        
         try {
             phIntelli = Model.To<EquipmentPhase>();
         } catch (InvalidCastException) {
