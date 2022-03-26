@@ -14,8 +14,7 @@ var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), eq
 This heavily relies on the type structure being changed obviously, a method to retrieve the specified root is necessary,
 in this case it will be valid for templates, but the core concept still applies.
 ```csharp
-// How it would work inside a template:
-string template = @"
+string template = 
     @using ...Specifications;
     @inherits ...RazorTemplateBase<Shadow>
     @using System;
@@ -56,6 +55,6 @@ string template = @"
     @if (Model.type().Contains(""EquipmentPhase"")) {
         // Do something with equipmentPhase specific data
     }
-";
+;
 ```
 >Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/XAkTZm
