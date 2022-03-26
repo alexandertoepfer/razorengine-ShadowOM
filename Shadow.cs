@@ -44,14 +44,14 @@ public abstract class Shadow {
 	
 	/// <summary>This method takes a list of models and populates the matching type.</summary>
 	/// <param name="list">The list of possible models.</param>
-	public virtual Dictionary<String,dynamic> In(List<Type> list) {
-		var results = new Dictionary<String,dynamic>(list.Count);
-		foreach (var item in list.Select((type, i) => new { i, type }))
+	public virtual Dictionary<String,dynamic> In(Type[] list) {
+		var results = new Dictionary<String,dynamic>();
+		foreach (var item in list)
 		{
-			if (item.type.Name.Contains(Type())) {
-				var inst = Activator.CreateInstance(item.type);
-				inst = Convert.ChangeType(this, AssetType);
-				results[item.type.Name] = inst;
+			if (item.Name.Contains(Type())) {
+				var instance = Activator.CreateInstance(item);
+				instance = this.Root();
+				results[item.Name] = instance;
 				break;
 			}
 		}
@@ -102,33 +102,27 @@ public class Program {
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 				// Intellisense support, one model
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-				EquipmentPhase Asset = null;
+				EquipmentPhase? phIntelli = null;
+
 				try {
-					Asset = Model.To<EquipmentPhase>();
+					phIntelli = model.To<EquipmentPhase>();
 				} catch (InvalidCastException) {
 					// Type not supported, could be that Model is EquipmentModule
-					// which this template does not support
+					// model.To<EquipmentModule>();
 				}
 
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 				// Intellisense support, two models
 				// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-				var modelTypes = new List<Type> { 
-					typeof(EquipmentPhase), 
-					typeof(EquipmentModule)
-				};
-
+				EquipmentPhase? phIntelli = null;
+				EquipmentModule? emIntelli = null;
+				
 				// Get strong typed objects from model
-				//var viableModels = Model.In(modelTypes);
+				var modelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
 
-				// Assign model(s)
-				//EquipmentPhase phIntelli = Model.In(modelTypes)[""EquipmentPhase""];
-				try {
-					EquipmentModule emIntelli = Model.In(modelTypes)[""EquipmentModule""];
-				} catch (KeyNotFoundException) {
-					// Type not supported, could be that Model is EquipmentPhase
-					// Model.In(modelTypes)[""EquipmentPhase""];
-				}
+				// Assign model
+				phIntelli2 = modelSet.GetValueOrDefault(""EquipmentPhase"", null);
+				emIntelli = modelSet.GetValueOrDefault(""EquipmentModule"", null);
 			}
 			<!--
 			@@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
@@ -178,8 +172,9 @@ public class Program {
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Examples with strong typed variable, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		EquipmentPhase phIntelli = null;
+		EquipmentPhase? phIntelli = null;
 		var model = shadows[0]; // Example Model
+		
 		try {
 			phIntelli = model.To<EquipmentPhase>();
 		} catch (InvalidCastException) {
@@ -190,24 +185,14 @@ public class Program {
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Examples with strong typed variable, both models, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		var modelTypes = new List<Type> { 
-			typeof(EquipmentPhase), 
-			typeof(EquipmentModule)
-		};
 		model = shadows[1]; // Example Model
 		
 		// Get strong typed objects from model
-		//var viableModels = model.In(modelTypes);
+		var modelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
 		
 		// Assign model
-		//EquipmentPhase phIntelli = model.In(modelTypes)["EquipmentPhase"];
-		EquipmentModule emIntelli = null;
-		try {
-			emIntelli = model.In(modelTypes)["EquipmentModule"];
-		} catch (KeyNotFoundException) {
-			// Type not supported, could be that Model is EquipmentPhase
-			// model.In(modelTypes)["EquipmentPhase"];
-		}
+		EquipmentPhase? phIntelli2 = modelSet.GetValueOrDefault("EquipmentPhase", null);
+		EquipmentModule? emIntelli = modelSet.GetValueOrDefault("EquipmentModule", null);
 		
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Given values from the specifications as expected :)
