@@ -15,8 +15,8 @@ This heavily relies on the type structure being changed obviously, a method to r
 in this case it will be valid for templates, but the core concept still applies.
 ```csharp
 string template = @""
-    @using ...Specifications;
-    @inherits ...RazorTemplateBase<Shadow>
+    @using Specifications;
+    @inherits Razor.TemplateBase<Shadow>
     @using System;
     @{
         // Type of Asset depends on what was loaded into memory
