@@ -16,10 +16,10 @@ in this case it will be valid for templates, but the core concept still applies.
 
 ```csharp
 public abstract class Shadow {
-public dynamic Root();
-public T To<T>();
-public bool Is(Type type);
-public NullValueDictionary<String,dynamic> In(Type[] list);
+    public dynamic Root(); // returns the original object.
+    public T To<T>(); // returns the original object as type T. throws InvalidCastException
+    public bool Is(Type type); // type checking.
+    public NullValueDictionary<String,dynamic> In(Type[] list); // returns collection with matching type.
 };
 ```
 
