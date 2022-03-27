@@ -14,6 +14,15 @@ var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), eq
 This heavily relies on the type structure being changed obviously, a method to retrieve the specified root is necessary,
 in this case it will be valid for templates, but the core concept still applies. 
 
+```csharp
+public abstract class Shadow {
+public dynamic Root();
+public T To<T>();
+public bool Is(Type type);
+public NullValueDictionary<String,dynamic> In(Type[] list);
+};
+```
+
 >Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/cHQz9R
 
 A template making use of the ShadowOM
