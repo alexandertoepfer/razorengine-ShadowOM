@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,12 @@ using System.Linq;
 // Dummy class to highlight usage in main
 public static class Engine {
 	public static class Razor {
-		public static object RunCompile(string template,
+		public static object? RunCompile(string template,
 						string templateKey,
 						Type modelType,
 						object objectModel) => null;
 		
-		public static object Compile(string template,
+		public static object? Compile(string template,
 					     string templateKey,
 					     Type modelType) => null;
 	};
@@ -29,8 +30,8 @@ public static class Engine {
 // NullValueDictionary class to directly assign nullables after look-up and 
 // avoid stuff like Dict.ContainsKey(...)? Dict[...] : null and KeyNotFoundException
 // when we want to have null entries for not populated OMs.
-public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class {
-    new public U this[T key] {
+public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class where T : notnull {
+    new public U? this[T key] {
 		get {
             this.TryGetValue(key, out var val);
             return val;
@@ -46,8 +47,8 @@ public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class {
 public abstract class Shadow {
 	protected abstract Type AssetType { get; }
 	
-	// This method returns the type as string.
-	public string Type() => AssetType.Name;
+	// This method returns the type as String.
+	public String Type() => AssetType.Name;
 	
 	// This method returns the original object.
 	public dynamic Root() => Convert.ChangeType(this, AssetType);
@@ -61,15 +62,10 @@ public abstract class Shadow {
 	// This method takes a list of model types and populates the matching type.
 	public NullValueDictionary<String, dynamic> In(Type[] list) {
 		var results = new NullValueDictionary<String, dynamic>();
-		foreach (var item in list)
-		{
-			if (Is(item)) {
-				var instance = Activator.CreateInstance(item);
-				instance = this.Root();
-				results.Add(item.Name, instance);
-				break;
-			}
-		}
+		var item = list.Where(x => Is(x)).Single();
+		var instance = Activator.CreateInstance(item);
+		instance = this.Root();
+		results.Add(item.Name, instance);
 		return results;
 	}
 };
@@ -79,13 +75,13 @@ public abstract class Shadow {
 public class EquipmentPhase : Shadow {
 	sealed protected override Type AssetType { get; } = typeof(EquipmentPhase);
 	public string TypeIdentifier { get; } = "PH";
-	public string Name { get; init; }
+	public string? Name { get; init; }
 	
 };
 public class EquipmentModule : Shadow {
 	sealed protected override Type AssetType { get; } = typeof(EquipmentModule);
 	public string TypeIdentifier { get; } = "EM";
-	public string Name { get; init; }
+	public string? Name { get; init; }
 	
 };
 
