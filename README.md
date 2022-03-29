@@ -85,7 +85,7 @@ string template = @""
     Type2? t2OM = nvdModelSet[type2];
   }
   @* Old approach with dynamic *@
-  /* @if (OM != null) {
+  /*@if (OM != null) {
     var res = $@""
       @file {OM.Prefix}_{OM.Name}_{(OM.Has("Suffix") ? OM.Suffix + "_" : "")}Info.log
       @brief This file contains general information.
