@@ -92,7 +92,7 @@ string template = @""
     "";
     @res
   }
-  @if (Model.Is(type2)) {
+  @if (Model.Is(type2) && t2OM != null) {
     var res = $@""
       @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
       @brief This file contains general information.
