@@ -84,14 +84,28 @@ string template = @""
     Type2? t2OM = nvdModelSet[type2];
   }
   @* Template for both models *@
-  @if (Model.Is(type1)) {
-    var res = $@""
-      @file {t1OM.Prefix}_{t1OM.Name}_Info.log
-      @brief This file contains general information.
-      Warning! This is a generated file. Manual changes will be omitted.
-    "";
-    @res
+  @switch (Model.type()) {
+    case nameof(Type1):
+      var res = $@""
+        @file {t1OM.Prefix}_{t1OM.Name}_Info.log
+        @brief This file contains general information.
+        Warning! This is a generated file. Manual changes will be omitted.
+      "";
+      @res
+    break;
+    
+    case nameof(Type2):
+      if (t2OM != null) {
+        var res = $@""
+          @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
+          @brief This file contains general information.
+          Warning! This is a generated file. Manual changes will be omitted.
+        "";
+        @res
+      }
+    break;
   }
+
   @if (Model.Is(type2) && t2OM != null) {
     var res = $@""
       @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
@@ -102,4 +116,4 @@ string template = @""
   }
 "";
 ```
->Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/OVVdJn
+>Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/HQ54gh
