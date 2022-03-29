@@ -148,22 +148,35 @@ public class Program {
     //Type1? t1OM = nvdModelSet[type1];
     Type2? t2OM = nvdModelSet[type2];
 
-    // Assign models
-    List<dynamic> models = nvdModelSet.Values.ToList();
-
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     // Given values from the specifications as expected :)
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    if (model1.Is(type1) /* && models[0] != null */) {
-      Console.WriteLine($@"
-        <!--
-        @file {t1OM.Prefix}_{t1OM.Name}_Info.log
-        @brief This file contains general information.
-        Warning! This is a generated file. Manual changes will be omitted.
-        -->
-      ");
+		
+    switch (model1.Type()) {
+      case nameof(Type1):
+        Console.WriteLine($@"
+          <!--
+          @file {t1OM.Prefix}_{t1OM.Name}_Info.log
+          @brief This file contains general information.
+          Warning! This is a generated file. Manual changes will be omitted.
+          -->
+        ");
+      break;
+
+      case nameof(Type2):
+        if (t2OM != null) {
+          Console.WriteLine($@"
+            <!--
+            @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
+            @brief This file contains general information.
+            Warning! This is a generated file. Manual changes will be omitted.
+            -->
+          ");
+        }
+      break;
     }
-    if (model2.Is(type2) /* && models[1] != null */) {
+					  
+    if (model2.Is(type2) && t2OM != null) {
       Console.WriteLine($@"
         <!--
         @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
