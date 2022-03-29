@@ -35,7 +35,7 @@ string template = @""
 	@using System;
 	@{
 		// Type of Asset depends on what was loaded into memory
-		dynamic OM = Model.Root();
+		/* dynamic OM = Model.Root(); */
 		
 		// Object Models to be supported
 		Type type1 = typeof(Type1), type2 = typeof(Type2);
