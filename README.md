@@ -87,15 +87,15 @@ string template = @""
   @if (Model.Is(type1)) {
     var res = $@""
       @file {t1OM.Prefix}_{t1OM.Name}_Info.log
-      @@brief This file contains general information.
+      @brief This file contains general information.
       Warning! This is a generated file. Manual changes will be omitted.
     "";
     @res
   }
   @if (Model.Is(type2)) {
     var res = $@""
-      @@file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
-      @@brief This file contains general information.
+      @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
+      @brief This file contains general information.
       Warning! This is a generated file. Manual changes will be omitted.
     "";
     @res
