@@ -24,62 +24,61 @@ public abstract class Shadow {
 };
 ```
 
->Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/Kxedy4
+>Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/OxprKU
 
 A template making use of the ShadowOM
 would look like this depending what model types it processes:
 ```csharp
 string template = @""
-    @inherits Razor.TemplateBase<Shadow>
-    @using System;
-    @{
-        // Type of Asset depends on what was loaded into memory
-        dynamic OM = Model.Root();
+@inherits Razor.TemplateBase<Shadow>
+@using System;
+@{
+// Type of Asset depends on what was loaded into memory
+dynamic OM = Model.Root();
 
-        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	// Examples with strong typed variable, Intellisense
-	// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	Type1? t1OM = null;
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// Examples with strong typed variable, Intellisense
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+var model = shadows[0]; // Example Model
+Type1? t1OM = null;
 
-	try {
-		t1OM = Model.To<Type1>();
-	} catch (InvalidCastException) {
-		// Can not be cast to Type1
-		// Model.To<Type2>();
-		return;
-	}
+try {
+	t1OM = model.To<Type1>();
+} catch (InvalidCastException) {
+	// Can not be cast to Type1
+	// model.To<Type2>();
+	return;
+}
 
-	// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	// Examples with strong typed variable, both models, Intellisense
-	// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// Examples with strong typed variable, both models, Intellisense
+// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+model = shadows[1]; // Example Model
 
-	// Get strong typed objects from model
-	var nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
+// Get strong typed objects from model
+var nvdModelSet = model.In(new [] { typeof(Type1), typeof(Type2) });
 
-	// Assign model
-	Type1? t1OM = nvdModelSet["Type1"];
-	Type2? t2OM = nvdModelSet["Type2"];
-		
-	if ((new List<dynamic?> { t1OM2, t2OM }).All(x => (x == null)))
-		// Can not be cast to neither Type1, Type2
-		return;
-    }
-    @* Now certain code can be executed with only type1OMs or type2OMs *@
-    @if (Model.Is(typeof(Type1)) && t1OM != null) {
-	<!--
-	@@type Type1
-	@@file @(t1OM.Prefix)_@(t1OM.Name)_{(t1OM.HasProperty("Suffix") ? t1OM.Suffix + "_" : "")}Info.log
-	@@brief This file contains general information.
-	Warning! This is a generated file. Manual changes will be omitted.
-	-->
-    }
-    @if (Model.Is(typeof(Type2)) && t2OM != null) {
-	<!--
-	@@type Type2
-	@@file @(t2OM.Prefix)_@(t2OM.Name)_{(t2OM.HasProperty("Suffix") ? t2OM.Suffix + "_" : "")}Info.log
-	@@brief This file contains general information.
-	Warning! This is a generated file. Manual changes will be omitted.
-	-->
-    }
+if (nvdModelSet.All(x => (x.Value == null)))
+	// Can not be cast to neither Type1, Type2
+	return;
+
+// Assign models
+Type1? t1OM2 = nvdModelSet[typeof(Type1)];
+Type2? t2OM = nvdModelSet[typeof(Type2)];
+
+// Assign models
+List<dynamic> models = nvdModelSet.Values.ToList();
+}
+@* Template for both models *@
+@if (t1OM.Is(typeof(Type1)) && t1OM != null /* && models[0] != null */) {
+		@@file {t1OM.Prefix}_{t1OM.Name}_Info.log
+		@@brief This file contains general information.
+		Warning! This is a generated file. Manual changes will be omitted.
+}
+@if (t2OM.Is(typeof(Type2)) && t2OM != null /* && models[1] != null */) {
+		@@file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
+		@@brief This file contains general information.
+		Warning! This is a generated file. Manual changes will be omitted.
+}
 "";
 ```
