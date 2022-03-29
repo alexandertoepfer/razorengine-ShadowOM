@@ -16,7 +16,8 @@ using System.Linq;
 // NullValueDictionary class to directly assign nullables after look-up and 
 // avoid stuff like Dict.ContainsKey(...)? Dict[...] : null and KeyNotFoundException
 // when we want to have null entries for not populated OMs.
-public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class where T : notnull {
+public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class
+	                                                      where T : notnull {
   new public U? this[T key] {
     get {
       this.TryGetValue(key, out var val);
@@ -31,6 +32,7 @@ public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class where 
 // The idea is to squash objects in memory into a hidden ShadowOM for faster compilation
 // while being able to easily retrieve the original during runtime of templates.
 public abstract class Shadow {
+  // Type of deserialized OM
   protected abstract Type ModelType { get; }
 
   // This method returns the type as String.
@@ -46,7 +48,7 @@ public abstract class Shadow {
   public bool Is(Type type) => type == ModelType;
 
   // This method can test whether a property exists
-  public bool HasProperty(String prop) => this.GetType().GetProperty(prop) != null;
+  public bool Has(String prop) => this.GetType().GetProperty(prop) != null;
   
   // This method takes a list of model types and populates the matching type.
   public NullValueDictionary<Type, dynamic> In(Type[] list) {
@@ -102,14 +104,14 @@ public class Program {
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     Console.WriteLine($@"
       <!--
-      @file {t1Root.Prefix}_{t1Root.Name}_{(t1Root.HasProperty("Suffix") ? t1Root.Suffix + "_" : "")}Info.log
+      @file {t1Root.Prefix}_{t1Root.Name}_{(t1Root.Has("Suffix") ? t1Root.Suffix + "_" : "")}Info.log
       @brief This file contains general information.
       Warning! This is a generated file. Manual changes will be omitted.
       -->
     ");
     Console.WriteLine($@"
       <!--
-      @file {t2Root.Prefix}_{t2Root.Name}_{(t2Root.HasProperty("Suffix") ? t2Root.Suffix + "_" : "")}Info.log
+      @file {t2Root.Prefix}_{t2Root.Name}_{(t2Root.Has("Suffix") ? t2Root.Suffix + "_" : "")}Info.log
       @brief This file contains general information.
       Warning! This is a generated file. Manual changes will be omitted.
       -->
