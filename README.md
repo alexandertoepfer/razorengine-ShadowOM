@@ -1,4 +1,4 @@
-# RazorEngine CG - ShadowOM
+# RazorEngine - ShadowOM
 Proposal to optimise RazorEngine compilation of templates with multiple OMs
 through introduction of a hidden Shadow OM similar to how Mozilla solved this problem in Web Components.
 ```csharp
