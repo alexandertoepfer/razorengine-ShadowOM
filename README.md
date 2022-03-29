@@ -4,7 +4,7 @@ through introduction of a hidden Shadow OM similar to how Mozilla solved this pr
 >Inspired by https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM
 ```csharp
 foreach(var type in new [] { typeof(Type1), typeof(Type2) }) {
-    Engine.Razor.Compile(template, "templateKey", type);
+	Engine.Razor.Compile(template, "templateKey", type);
 }
 ```
 Above approach to solving the multiple entity problem causes long term performance setbacks,
@@ -17,11 +17,11 @@ in this case it will be valid for templates, but the core concept still applies.
 
 ```csharp
 public abstract class Shadow {
-    public dynamic Root(); // returns the original object.
-    public T To<T>(); // returns the original object as type T. throws InvalidCastException
-    public bool Is(Type type); // type checking.
-    public NullValueDictionary<String, dynamic> In(Type[] list); // returns collection with matching type.
-    public bool HasProperty(String prop); // returns whether a property exists.
+	public dynamic Root(); // returns the original object.
+	public T To<T>(); // returns the original object as type T. throws InvalidCastException
+	public bool Is(Type type); // type checking.
+	public NullValueDictionary<String, dynamic> In(Type[] list); // returns collection with matching type.
+	public bool HasProperty(String prop); // returns whether a property exists.
 };
 ```
 
@@ -36,7 +36,7 @@ string template = @""
 	@{
 		// Type of Asset depends on what was loaded into memory
 		/* dynamic OM = Model.Root(); */
-		
+
 		// Object Models to be supported
 		Type type1 = typeof(Type1), type2 = typeof(Type2);
 
@@ -78,7 +78,7 @@ string template = @""
 		Warning! This is a generated file. Manual changes will be omitted.
 	}*/
 	@* Template for both models *@
-	@if (Model.Is(type1) && (t1OM != null)) {
+		@if (Model.Is(type1) && (t1OM != null)) {
 		@@file {t1OM.Prefix}_{t1OM.Name}_Info.log
 		@@brief This file contains general information.
 		Warning! This is a generated file. Manual changes will be omitted.
