@@ -55,36 +55,36 @@ string template = @""
     // Object Models to be supported
     Type type1 = typeof(Type1), type2 = typeof(Type2);
 
-    // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    // Example with strong typed Object Model, Intellisense
-    // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    Type1? t1OM = null;
+    // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		// Examples with strong typed variable, Intellisense
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		Type1? t1OM = null;
+		
+		try {
+			t1OM = Model.To<Type1>();
+		} catch (InvalidCastException) {
+			// Can not be cast to Type1
+			// Model.To<Type2>();
+			return;
+		}
+		
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		// Examples with strong typed variable, both models, Intellisense
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		
+		// Get strong typed objects from model
+		var nvdModelSet = Model.In(new [] { type1, type2 });
 
-    try {
-      t1OM = Model.To<Type1>();
-    } catch (InvalidCastException) {
-      // Can not be cast to Type1
-      // Model.To<Type2>();
-      return;
-    }
-
-    // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    // Example with strong typed Object Model for both types, Intellisense
-    // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-    // Get strong typed objects from model
-    var nvdModelSet = Model.In(new [] { type1, type2 });
-
-    if (nvdModelSet.All(x => (x.Value == null)))
-      // Can not be cast to neither Type1, Type2
-      return;
-
-    // Assign models
-    t1OM = nvdModelSet[type1];
-    Type2? t2OM = nvdModelSet[type2];
-
-    // Assign models
-    List<dynamic> models = nvdModelSet.Values.ToList();
+		if (!nvdModelSet.Values.Any(x => x != null))
+			// Can not be cast to neither Type1, Type2
+			return;
+						  
+		// Intellisense
+		//Type1? t1OM = nvdModelSet[type1];
+		Type2? t2OM = nvdModelSet[type2];
+						  
+		// Assign models
+		List<dynamic> models = nvdModelSet.Values.ToList();
   }
   @* Template for dynamic *@
   /* if (OM != null) {
