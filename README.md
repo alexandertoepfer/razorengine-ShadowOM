@@ -44,7 +44,7 @@ string template = @""
 		t1OM = Model.To<Type1>();
 	} catch (InvalidCastException) {
 		// Could be that Model is Type2
-		// model.To<Type2>();
+		// Model.To<Type2>();
 		return;
 	}
 
