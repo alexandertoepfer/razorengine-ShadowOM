@@ -7,7 +7,7 @@ foreach(var type in new [] { typeof(Type1), typeof(Type2) }) {
   Engine.Razor.Compile(template, "templateKey", type);
 }
 ```
-Above approach to solving the multiple OMs problem causes long term performance setbacks and it breaks Intellisense,
+Above approach to solving the multiple OMs problem causes long term performance setbacks and it fundamentally breaks Intellisense due to the TemplateBase dynamic,
 however it seems that drawing inspiration from the ShadowDOM feature might pose to be a precaution to this issue. Let's assume:
 ```csharp
 var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), type1OM);
