@@ -57,7 +57,7 @@ public abstract class Shadow {
 	public T To<T>() => (T) Convert.ChangeType(this, typeof(T));
 	
 	// This method can be used for type checking.
-	public bool Is(Type type) => (type == ModelType);
+	public bool Is(Type type) => type == ModelType;
 	
 	// This method takes a list of model types and populates the matching type.
 	public NullValueDictionary<Type, dynamic> In(Type[] list) {
@@ -71,7 +71,7 @@ public abstract class Shadow {
 	
 	// This method can test whether a property exists
 	public bool HasProperty(String prop) {
-    	return (this.GetType().GetProperty(prop) != null);
+    	return this.GetType().GetProperty(prop) != null;
 	}
 };
 
@@ -139,16 +139,17 @@ public class Program {
 		-->
 		");
 		
+		// Object Model types
 		Type type1 = typeof(Type1), type2 = typeof(Type2);
 						  
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Examples with strong typed variable, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		var model = shadows[0]; // Example Model
+		var model1 = shadows[0]; // Example Model
 		Type1? t1OM = null;
 		
 		try {
-			t1OM = model.To<Type1>();
+			t1OM = model1.To<Type1>();
 		} catch (InvalidCastException) {
 			// Can not be cast to Type1
 			// model.To<Type2>();
@@ -158,16 +159,16 @@ public class Program {
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Examples with strong typed variable, both models, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		model = shadows[1]; // Example Model
+		var model2 = shadows[1]; // Example Model
 		
 		// Get strong typed objects from model
-		var nvdModelSet = model.In(new [] { type1, type2 });
+		var nvdModelSet = model2.In(new [] { type1, type2 });
 
-		if (nvdModelSet.All(x => (x.Value == null)))
+		if (!nvdModelSet.Values.Any(x => x != null))
 			// Can not be cast to neither Type1, Type2
 			return;
 						  
-		// Assign models
+		// Intellisense
 		//Type1? t1OM = nvdModelSet[type1];
 		Type2? t2OM = nvdModelSet[type2];
 						  
@@ -177,7 +178,7 @@ public class Program {
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Given values from the specifications as expected :)
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		if (t1OM.Is(type1) && (t1OM != null) /* && models[0] != null */) {
+		if (model1.Is(type1) && (t1OM != null) /* && models[0] != null */) {
 			Console.WriteLine($@"
 			<!--
 				@file {t1OM.Prefix}_{t1OM.Name}_Info.log
@@ -186,7 +187,7 @@ public class Program {
 			-->
 			");
 		}
-		if (t2OM.Is(type2) && (t2OM != null) /* && models[1] != null */) {
+		if (model2.Is(type2) && (t2OM != null) /* && models[1] != null */) {
 			Console.WriteLine($@"
 			<!--
 				@file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
