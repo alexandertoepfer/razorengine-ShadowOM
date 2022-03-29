@@ -59,7 +59,7 @@ string template = @""
 		// Examples with strong typed variable, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		Type1? t1OM = null;
-		
+
 		try {
 			t1OM = Model.To<Type1>();
 		} catch (InvalidCastException) {
@@ -67,22 +67,22 @@ string template = @""
 			// Model.To<Type2>();
 			return;
 		}
-		
+
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Examples with strong typed variable, both models, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		
+
 		// Get strong typed objects from model
 		var nvdModelSet = Model.In(new [] { type1, type2 });
 
 		if (!nvdModelSet.Values.Any(x => x != null))
 			// Can not be cast to neither Type1, Type2
 			return;
-						  
+
 		// Intellisense
 		//Type1? t1OM = nvdModelSet[type1];
 		Type2? t2OM = nvdModelSet[type2];
-						  
+
 		// Assign models
 		List<dynamic> models = nvdModelSet.Values.ToList();
   }
