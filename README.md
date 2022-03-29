@@ -30,55 +30,55 @@ A template making use of the ShadowOM
 would look like this depending what model types it processes:
 ```csharp
 string template = @""
-@inherits Razor.TemplateBase<Shadow>
-@using System;
-@{
-// Type of Asset depends on what was loaded into memory
-dynamic OM = Model.Root();
+	@inherits Razor.TemplateBase<Shadow>
+	@using System;
+	@{
+		// Type of Asset depends on what was loaded into memory
+		dynamic OM = Model.Root();
 
-// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-// Examples with strong typed variable, Intellisense
-// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-var model = shadows[0]; // Example Model
-Type1? t1OM = null;
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		// Examples with strong typed variable, Intellisense
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		var model = shadows[0]; // Example Model
+		Type1? t1OM = null;
 
-try {
-	t1OM = model.To<Type1>();
-} catch (InvalidCastException) {
-	// Can not be cast to Type1
-	// model.To<Type2>();
-	return;
-}
+		try {
+			t1OM = model.To<Type1>();
+		} catch (InvalidCastException) {
+			// Can not be cast to Type1
+			// model.To<Type2>();
+			return;
+		}
 
-// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-// Examples with strong typed variable, both models, Intellisense
-// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-model = shadows[1]; // Example Model
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		// Examples with strong typed variable, both models, Intellisense
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		model = shadows[1]; // Example Model
 
-// Get strong typed objects from model
-var nvdModelSet = model.In(new [] { typeof(Type1), typeof(Type2) });
+		// Get strong typed objects from model
+		var nvdModelSet = model.In(new [] { typeof(Type1), typeof(Type2) });
 
-if (nvdModelSet.All(x => (x.Value == null)))
-	// Can not be cast to neither Type1, Type2
-	return;
+		if (nvdModelSet.All(x => (x.Value == null)))
+			// Can not be cast to neither Type1, Type2
+			return;
 
-// Assign models
-Type1? t1OM2 = nvdModelSet[typeof(Type1)];
-Type2? t2OM = nvdModelSet[typeof(Type2)];
+		// Assign models
+		Type1? t1OM2 = nvdModelSet[typeof(Type1)];
+		Type2? t2OM = nvdModelSet[typeof(Type2)];
 
-// Assign models
-List<dynamic> models = nvdModelSet.Values.ToList();
-}
-@* Template for both models *@
-@if (t1OM.Is(typeof(Type1)) && t1OM != null /* && models[0] != null */) {
+		// Assign models
+		List<dynamic> models = nvdModelSet.Values.ToList();
+	}
+	@* Template for both models *@
+	@if (t1OM.Is(typeof(Type1)) && t1OM != null /* && models[0] != null */) {
 		@@file {t1OM.Prefix}_{t1OM.Name}_Info.log
 		@@brief This file contains general information.
 		Warning! This is a generated file. Manual changes will be omitted.
-}
-@if (t2OM.Is(typeof(Type2)) && t2OM != null /* && models[1] != null */) {
+	}
+	@if (t2OM.Is(typeof(Type2)) && t2OM != null /* && models[1] != null */) {
 		@@file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
 		@@brief This file contains general information.
 		Warning! This is a generated file. Manual changes will be omitted.
-}
+	}
 "";
 ```
