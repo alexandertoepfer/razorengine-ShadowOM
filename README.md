@@ -62,7 +62,7 @@ string template = @""
 			return;
 
 		// Assign models
-		Type1? t1OM2 = nvdModelSet[typeof(Type1)];
+		t1OM = nvdModelSet[typeof(Type1)];
 		Type2? t2OM = nvdModelSet[typeof(Type2)];
 
 		// Assign models
