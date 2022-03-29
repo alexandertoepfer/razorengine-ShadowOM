@@ -79,12 +79,9 @@ string template = @""
       // Can not be cast to neither Type1, Type2
       return;
 
-    // Intellisense
+    // Assign models
     //Type1? t1OM = nvdModelSet[type1];
     Type2? t2OM = nvdModelSet[type2];
-
-    // Assign models
-    List<dynamic> models = nvdModelSet.Values.ToList();
   }
   @* Template for both models *@
   @if (Model.Is(type1)) {
