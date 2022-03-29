@@ -25,7 +25,7 @@ public abstract class Shadow {
 };
 ```
 
->Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/O4l8op
+>Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/kYKf0L
 
 A template making use of the ShadowOM
 would look like this depending what model types it processes:
