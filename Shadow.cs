@@ -30,7 +30,8 @@ public static class Engine {
 // NullValueDictionary class to directly assign nullables after look-up and 
 // avoid stuff like Dict.ContainsKey(...)? Dict[...] : null and KeyNotFoundException
 // when we want to have null entries for not populated OMs.
-public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class where T : notnull {
+public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class 
+                                                          where T : notnull {
   new public U? this[T key] {
     get {
       this.TryGetValue(key, out var val);
