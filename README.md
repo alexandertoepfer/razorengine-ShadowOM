@@ -2,14 +2,14 @@
 Proposal to optimise RazorEngine compilation of templates with multiple OMs
 through introduction of a hidden Shadow OM similar to how Mozilla solved this problem in Web Components.
 ```csharp
-foreach(var type in new [] { typeof(EquipmentPhase), typeof(EquipmentModule) }) {
+foreach(var type in new [] { typeof(Type1), typeof(Type2) }) {
     Engine.Razor.Compile(template, "templateKey", type);
 }
 ```
 Above approach to solving the multiple entity problem causes long term performance setbacks,
 it seems that drawing inspiration from the ShadowDOM feature might pose to be a precaution to this issue.
 ```csharp
-var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), equipmentPhaseOM);
+var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), type1OM);
 ```
 This heavily relies on the type structure being changed obviously, a method to retrieve the specified root is necessary,
 in this case it will be valid for templates, but the core concept still applies. 
@@ -29,48 +29,47 @@ A template making use of the ShadowOM
 would look like this depending what model types it processes:
 ```csharp
 string template = @""
-    @using Specifications;
     @inherits Razor.TemplateBase<Shadow>
     @using System;
     @{
         // Type of Asset depends on what was loaded into memory
-        dynamic Asset = Model.Root();
+        dynamic OM = Model.Root();
 
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         // Intellisense support, template with one model
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        EquipmentPhase? phAsset = null;
+        Type1? type1OM = null;
 
         try {
-            phAsset = Model.To<EquipmentPhase>();
+            type1OM = Model.To<Type1>();
         } catch (InvalidCastException) {
-            // Type not supported, could be that Model is EquipmentModule
-            // model.To<EquipmentModule>();
+            // Type not supported, could be that Model is Type2
+            // model.To<Type2>();
         }
 
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
         // Intellisense support, template with multiple models
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        EquipmentPhase? phAsset = null;
-        EquipmentModule? emAsset = null;
+        Type1? type1OM = null;
+        Type2? type2OM = null;
 
         // Get strong typed objects from model
-        var nvdModelSet = Model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
+        var nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
 
         // Assign model
-        phAsset = nvdModelSet[""EquipmentPhase""];
-        emAsset = nvdModelSet[""EquipmentModule""];
+        type1OM = nvdModelSet[""Type1""];
+        type2OM = nvdModelSet[""Type2""];
     }
     <!--
-    @@file @(Asset.TypeIdentifier)_@(Asset.Name)_Info.log
-    @@brief This file contains general information about the asset.
+    @@file @(OM.Prefix)_@(OM.Name)_Info.log
+    @@brief This file contains general information.
     Warning! This is a generated file. Manual changes will be omitted.
     -->
-    @* Now certain code can be executed with only equipmentPhases or equipmentModules *@
-    @if (Model.Is(typeof(EquipmentPhase))) {
+    @* Now certain code can be executed with only type1OMs or type2OMs *@
+    @if (Model.Is(typeof(Type1))) {
         // Do something with equipmentPhase specific data
     }
-    @if (Model.Is(typeof(EquipmentModule))) {
+    @if (Model.Is(typeof(Type2))) {
         // Do something with equipmentModule specific data
     }
 "";
