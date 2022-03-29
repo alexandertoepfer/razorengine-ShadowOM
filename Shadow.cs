@@ -31,7 +31,7 @@ public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class
 // It's basically a type recovery strategy in place to make compilation faster.
 // The idea is to squash objects in memory into a hidden ShadowOM for faster compilation
 // while being able to easily retrieve the original during runtime of templates.
-public abstract class Shadow {
+public abstract class ShadowOM {
   // Type of deserialized OM
   protected abstract Type ModelType { get; }
 
@@ -63,12 +63,12 @@ public abstract class Shadow {
 
 // Current Asset classes with their recovery type implemented for the Shadow OM,
 // the templates can easily retrieve the root again with this information, as highlighted below.
-public class Type1 : Shadow {
+public class Type1 : ShadowOM {
   sealed protected override Type ModelType { get; } = typeof(Type1);
   public string Prefix { get; } = "1";
   public string? Name { get; init; }
 };
-public class Type2 : Shadow {
+public class Type2 : ShadowOM {
   sealed protected override Type ModelType { get; } = typeof(Type2);
   public string Prefix { get; } = "2";
   public string? Name { get; init; }
@@ -83,7 +83,7 @@ public class Program {
     var t2 = new Type2 { Name = "Name2", Suffix = "Ext" };
 
     // The generic compilation type used for razor, alias the models
-    Shadow[] shadows = new [] { (t1 as Shadow), (t2 as Shadow) };
+    ShadowOM[] shadows = new [] { (t1 as ShadowOM), (t2 as ShadowOM) };
 
     // The root objects which have been specified originally
     List<dynamic> roots = shadows.Select(m => m.Root()).ToList();
@@ -176,7 +176,7 @@ public class Program {
           ");
         }
       break;
-    }		  
+    }				  
     if (model2.Is(type2) && t2OM != null) {
       Console.WriteLine($@"
         <!--
