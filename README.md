@@ -24,11 +24,7 @@ public abstract class Shadow {
   public bool HasProperty(String prop); // returns whether a property exists.
 };
 ```
-
->Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/WynRCd
-
-A template making use of the ShadowOM
-would look like this depending what model types it processes:
+Old approach to template example with multiple OMs, notice that there is no type safety. 
 ```csharp
 string oldTemplate = @""
   @inherits Razor.TemplateBase<dynamic>
@@ -44,7 +40,9 @@ string oldTemplate = @""
     // OM is Type2
   }
 "";
-
+```
+>Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/WynRCd
+```csharp
 string template = @""
   @inherits Razor.TemplateBase<Shadow>
   @using System;
