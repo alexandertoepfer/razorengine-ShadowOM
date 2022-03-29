@@ -44,7 +44,7 @@ string template = @""
 	try {
 		t1OM = Model.To<Type1>();
 	} catch (InvalidCastException) {
-		// Could be that Model is Type2
+		// Can not be cast to Type1
 		// Model.To<Type2>();
 		return;
 	}
@@ -61,7 +61,7 @@ string template = @""
 	Type2? t2OM = nvdModelSet["Type2"];
 		
 	if ((new List<dynamic?> { t1OM2, t2OM }).All(x => (x == null)))
-		// Could be that Model is neither Type1, Type2
+		// Can not be cast to neither Type1, Type2
 		return;
     }
     @* Now certain code can be executed with only type1OMs or type2OMs *@
