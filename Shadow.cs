@@ -30,8 +30,7 @@ public static class Engine {
 // NullValueDictionary class to directly assign nullables after look-up and 
 // avoid stuff like Dict.ContainsKey(...)? Dict[...] : null and KeyNotFoundException
 // when we want to have null entries for not populated OMs.
-public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class 
-                                                          where T : notnull {
+public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class where T : notnull {
   new public U? this[T key] {
     get {
       this.TryGetValue(key, out var val);
@@ -176,7 +175,7 @@ public class Program {
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     // Given values from the specifications as expected :)
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    if (model1.Is(type1) && (t1OM != null) /* && models[0] != null */) {
+    if (model1.Is(type1) /* && models[0] != null */) {
       Console.WriteLine($@"
         <!--
         @file {t1OM.Prefix}_{t1OM.Name}_Info.log
@@ -185,7 +184,7 @@ public class Program {
         -->
       ");
     }
-    if (model2.Is(type2) && (t2OM != null) /* && models[1] != null */) {
+    if (model2.Is(type2) /* && models[1] != null */) {
       Console.WriteLine($@"
         <!--
         @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
