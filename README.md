@@ -32,7 +32,7 @@ string oldTemplate = @""
   @using System;
   @{
     // Type of Model depends on what was loaded into memory
-    var OM = Model;
+    dynamic OM = Model;
   }
   @if (OM.Prefix == "1") {
     // OM is Type1
