@@ -84,6 +84,15 @@ string template = @""
     //Type1? t1OM = nvdModelSet[type1];
     Type2? t2OM = nvdModelSet[type2];
   }
+  @* Old approach with dynamic *@
+  /* @if (OM != null) {
+    var res = $@""
+      @file {OM.Prefix}_{OM.Name}_{(OM.Has("Suffix") ? OM.Suffix + "_" : "")}Info.log
+      @brief This file contains general information.
+      Warning! This is a generated file. Manual changes will be omitted.
+    "";
+    @res
+  }*/
   @* Template for both models *@
   @switch (Model.Type()) {
     case nameof(Type1):
@@ -115,6 +124,7 @@ string template = @""
     "";
     @res
   }
+  @*  *@
 "";
 ```
 >Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/keixGq
