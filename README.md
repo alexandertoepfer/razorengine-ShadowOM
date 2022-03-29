@@ -44,7 +44,7 @@ string oldTemplate = @""
 "";
 ```
 
-New approach:
+New approach with ShadowOM:
 ```csharp
 string template = @""
   @inherits Razor.TemplateBase<Shadow>
