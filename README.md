@@ -68,13 +68,19 @@ string template = @""
 		// Assign models
 		List<dynamic> models = nvdModelSet.Values.ToList();
 	}
+	@* Template for dynamic *@
+	@* if (OM != null) {
+		@@file {OM.Prefix}_{OM.Name}_{(OM.HasProperty("Suffix") ? OM.Suffix + "_" : "")}Info.log
+		@@brief This file contains general information.
+		Warning! This is a generated file. Manual changes will be omitted.
+	}*@
 	@* Template for both models *@
-	@if (Model.Is(typeof(Type1)) && t1OM != null /* && models[0] != null */) {
+	@if (Model.Is(typeof(Type1)) && t1OM != null) {
 		@@file {t1OM.Prefix}_{t1OM.Name}_Info.log
 		@@brief This file contains general information.
 		Warning! This is a generated file. Manual changes will be omitted.
 	}
-	@if (Model.Is(typeof(Type2)) && t2OM != null /* && models[1] != null */) {
+	@if (Model.Is(typeof(Type2)) && t2OM != null) {
 		@@file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
 		@@brief This file contains general information.
 		Warning! This is a generated file. Manual changes will be omitted.
