@@ -29,7 +29,7 @@ public abstract class Shadow {
 
 A template making use of the ShadowOM
 would look like this depending what model types it processes:
-```csharp
+```csharp 
 string template = @""
 	@inherits Razor.TemplateBase<Shadow>
 	@using System;
