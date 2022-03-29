@@ -10,13 +10,13 @@ foreach(var type in new [] { typeof(Type1), typeof(Type2) }) {
 Above approach to solving the multiple OMs problem causes long term performance setbacks and it fundamentally breaks Intellisense due to the TemplateBase dynamic,
 however it seems that drawing inspiration from the ShadowDOM feature might pose to be a precaution to this issue. Let's assume:
 ```csharp
-var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), type1OM);
+var result = Engine.Razor.RunCompile(template, "templateKey", typeof(ShadowOM), type1OM);
 ```
 This heavily relies on the type structure being changed obviously, a method to retrieve the specified root (just like in ShadowDOM) is necessary,
 in this scenario the use case will be valid for templates, but the core concept still applies. 
 
 ```csharp
-public abstract class Shadow {
+public abstract class ShadowOM {
   public dynamic Root(); // returns the original object.
   public T To<T>(); // returns the original object as type T. throws InvalidCastException
   public bool Is(Type type); // type checking.
@@ -47,7 +47,7 @@ string oldTemplate = @""
 New approach with ShadowOM:
 ```csharp
 string template = @""
-  @inherits Razor.TemplateBase<Shadow>
+  @inherits Razor.TemplateBase<ShadowOM>
   @using System;
   @{
     // Type of Model depends on what was loaded into memory
