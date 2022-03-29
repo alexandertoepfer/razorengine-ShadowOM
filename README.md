@@ -38,8 +38,7 @@ string template = @""
 		dynamic OM = Model.Root();
 		
 		// Object Models to be supported
-		Type type1 = typeof(Type1);
-		Type type2 = typeof(Type2);
+		Type type1 = typeof(Type1), type2 = typeof(Type2);
 
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Example with strong typed Object Model, Intellisense
