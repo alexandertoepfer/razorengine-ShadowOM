@@ -12,8 +12,8 @@ however it seems that drawing inspiration from the ShadowDOM feature might pose 
 ```csharp
 var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), type1OM);
 ```
-This heavily relies on the type structure being changed obviously, a method to retrieve the specified root is necessary,
-in this case it will be valid for templates, but the core concept still applies. 
+This heavily relies on the type structure being changed obviously, a method to retrieve the specified root (just like in ShadowDOM) is necessary,
+in this scenario the use case will be valid for templates, but the core concept still applies. 
 
 ```csharp
 public abstract class Shadow {
