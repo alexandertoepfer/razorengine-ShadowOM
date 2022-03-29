@@ -36,44 +36,47 @@ string template = @""
         dynamic OM = Model.Root();
 
         // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		// Examples with strong typed variable, Intellisense
-		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		Type1? t1OM = null;
-		
-		try {
-			t1OM = Model.To<Type1>();
-		} catch (InvalidCastException) {
-			// Could be that Model is Type2
-			// model.To<Type2>();
-			return;
-		}
-		
-		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		// Examples with strong typed variable, both models, Intellisense
-		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		
-		// Get strong typed objects from model
-		var nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
+	// Examples with strong typed variable, Intellisense
+	// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	Type1? t1OM = null;
 
-		// Assign model
-		Type1? t1OM = nvdModelSet["Type1"];
-		Type2? t2OM = nvdModelSet["Type2"];
+	try {
+		t1OM = Model.To<Type1>();
+	} catch (InvalidCastException) {
+		// Could be that Model is Type2
+		// model.To<Type2>();
+		return;
+	}
+
+	// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	// Examples with strong typed variable, both models, Intellisense
+	// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+	// Get strong typed objects from model
+	var nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
+
+	// Assign model
+	Type1? t1OM = nvdModelSet["Type1"];
+	Type2? t2OM = nvdModelSet["Type2"];
 		
-		if (new List<dynamic>{})
-			// Could be that Model is Type1
-			return;
+	if ((new List<dynamic?> { t1OM2, t2OM }).All(x => (x == null)))
+		// Could be that Model is neither Type1, Type2
+		return;
     }
-    <!--
-    @@file @(OM.Prefix)_@(OM.Name)_Info.log
-    @@brief This file contains general information.
-    Warning! This is a generated file. Manual changes will be omitted.
-    -->
     @* Now certain code can be executed with only type1OMs or type2OMs *@
     @if (Model.Is(typeof(Type1))) {
-        // Do something with equipmentPhase specific data
+	<!--
+	@@file @(t1OM.Prefix)_@(t1OM.Name)_{(t1OM.HasProperty("Suffix") ? t1OM.Suffix : "")}Info.log
+	@@brief This file contains general information.
+	Warning! This is a generated file. Manual changes will be omitted.
+	-->
     }
     @if (Model.Is(typeof(Type2))) {
-        // Do something with equipmentModule specific data
+	<!--
+	@@file @(t2OM.Prefix)_@(t2OM.Name)_{(t2OM.HasProperty("Suffix") ? t2OM.Suffix : "")}Info.log
+	@@brief This file contains general information.
+	Warning! This is a generated file. Manual changes will be omitted.
+	-->
     }
 "";
 ```
