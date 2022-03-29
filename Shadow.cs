@@ -139,6 +139,8 @@ public class Program {
 		-->
 		");
 		
+		Type type1 = typeof(Type1), type2 = typeof(Type2);
+						  
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Examples with strong typed variable, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -159,15 +161,15 @@ public class Program {
 		model = shadows[1]; // Example Model
 		
 		// Get strong typed objects from model
-		var nvdModelSet = model.In(new [] { typeof(Type1), typeof(Type2) });
+		var nvdModelSet = model.In(new [] { type1, type2 });
 
 		if (nvdModelSet.All(x => (x.Value == null)))
 			// Can not be cast to neither Type1, Type2
 			return;
 						  
 		// Assign models
-		Type1? t1OM2 = nvdModelSet[typeof(Type1)];
-		Type2? t2OM = nvdModelSet[typeof(Type2)];
+		//Type1? t1OM = nvdModelSet[type1];
+		Type2? t2OM = nvdModelSet[type2];
 						  
 		// Assign models
 		List<dynamic> models = nvdModelSet.Values.ToList();
@@ -175,7 +177,7 @@ public class Program {
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Given values from the specifications as expected :)
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		if (t1OM.Is(typeof(Type1)) && t1OM != null /* && models[0] != null */) {
+		if (t1OM.Is(type1) && (t1OM != null) /* && models[0] != null */) {
 			Console.WriteLine($@"
 			<!--
 				@file {t1OM.Prefix}_{t1OM.Name}_Info.log
@@ -184,7 +186,7 @@ public class Program {
 			-->
 			");
 		}
-		if (t2OM.Is(typeof(Type2)) && t2OM != null /* && models[1] != null */) {
+		if (t2OM.Is(type2) && (t2OM != null) /* && models[1] != null */) {
 			Console.WriteLine($@"
 			<!--
 				@file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
