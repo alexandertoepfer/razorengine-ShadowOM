@@ -60,12 +60,12 @@ public abstract class Shadow {
 	public bool Is(Type type) => (type == ModelType);
 	
 	// This method takes a list of model types and populates the matching type.
-	public NullValueDictionary<String, dynamic> In(Type[] list) {
-		var results = new NullValueDictionary<String, dynamic>();
+	public NullValueDictionary<Type, dynamic> In(Type[] list) {
+		var results = new NullValueDictionary<Type, dynamic>();
 		var item = list.Where(x => Is(x)).Single();
 		var instance = Activator.CreateInstance(item);
 		instance = this.Root();
-		results.Add(item.Name, instance);
+		results.Add(item, instance);
 		return results;
 	}
 	
@@ -126,7 +126,7 @@ public class Program {
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		Console.WriteLine($@"
 		<!--
-			@file {t1Root.Prefix}_{t1Root.Name}_{(t1Root.HasProperty("Suffix") ? t1Root.Suffix : "")}Info.log
+			@file {t1Root.Prefix}_{t1Root.Name}_{(t1Root.HasProperty("Suffix") ? t1Root.Suffix + "_" : "")}Info.log
 			@brief This file contains general information.
 			Warning! This is a generated file. Manual changes will be omitted.
 		-->
@@ -161,18 +161,21 @@ public class Program {
 		// Get strong typed objects from model
 		var nvdModelSet = model.In(new [] { typeof(Type1), typeof(Type2) });
 
-		// Assign model
-		Type1? t1OM2 = nvdModelSet["Type1"];
-		Type2? t2OM = nvdModelSet["Type2"];
-		
-		if ((new List<dynamic?> { t1OM2, t2OM }).All(x => (x == null)))
+		if (nvdModelSet.All(x => (x.Value == null)))
 			// Can not be cast to neither Type1, Type2
 			return;
+						  
+		// Assign models
+		Type1? t1OM2 = nvdModelSet[typeof(Type1)];
+		Type2? t2OM = nvdModelSet[typeof(Type2)];
+						  
+		// Assign models
+		List<dynamic> models = nvdModelSet.Values.ToList();
 		
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Given values from the specifications as expected :)
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		if (t1OM.Is(typeof(Type1)) && t1OM != null) {
+		if (t1OM.Is(typeof(Type1)) && t1OM != null /* && models[0] != null */) {
 			Console.WriteLine($@"
 			<!--
 				@file {t1OM.Prefix}_{t1OM.Name}_Info.log
@@ -181,10 +184,10 @@ public class Program {
 			-->
 			");
 		}
-		if (t2OM.Is(typeof(Type2)) && t2OM != null) {
+		if (t2OM.Is(typeof(Type2)) && t2OM != null /* && models[1] != null */) {
 			Console.WriteLine($@"
 			<!--
-				@file {t2OM.Prefix}_{t2OM.Name}_Info.log
+				@file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
 				@brief This file contains general information.
 				Warning! This is a generated file. Manual changes will be omitted.
 			-->
