@@ -44,6 +44,7 @@ string oldTemplate = @""
     // OM is Type2
   }
 "";
+
 string template = @""
   @inherits Razor.TemplateBase<Shadow>
   @using System;
