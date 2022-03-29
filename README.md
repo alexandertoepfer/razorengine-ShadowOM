@@ -66,6 +66,7 @@ string template = @""
     @* Now certain code can be executed with only type1OMs or type2OMs *@
     @if (Model.Is(typeof(Type1))) {
 	<!--
+	@@type Type1
 	@@file @(t1OM.Prefix)_@(t1OM.Name)_{(t1OM.HasProperty("Suffix") ? t1OM.Suffix : "")}Info.log
 	@@brief This file contains general information.
 	Warning! This is a generated file. Manual changes will be omitted.
@@ -73,6 +74,7 @@ string template = @""
     }
     @if (Model.Is(typeof(Type2))) {
 	<!--
+	@@type Type2
 	@@file @(t2OM.Prefix)_@(t2OM.Name)_{(t2OM.HasProperty("Suffix") ? t2OM.Suffix : "")}Info.log
 	@@brief This file contains general information.
 	Warning! This is a generated file. Manual changes will be omitted.
