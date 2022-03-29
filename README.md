@@ -38,7 +38,7 @@ string oldTemplate = @""
   @if (OM.Prefix == "1") {
     // OM is Type1
   }
-  @if (OM.Prefix == "2") {
+  @else if (OM.Prefix == "2") {
     // OM is Type2
   }
 "";
