@@ -30,11 +30,25 @@ public abstract class Shadow {
 A template making use of the ShadowOM
 would look like this depending what model types it processes:
 ```csharp
+string oldTemplate = @""
+  @inherits Razor.TemplateBase<dynamic>
+  @using System;
+  @{
+    // Type of Model depends on what was loaded into memory
+    var OM = Model;
+  }
+  @if (OM.Prefix == "1") {
+    // OM is Type1
+  }
+  @if (OM.Prefix == "2") {
+    // OM is Type2
+  }
+"";
 string template = @""
   @inherits Razor.TemplateBase<Shadow>
   @using System;
   @{
-    // Type of Asset depends on what was loaded into memory
+    // Type of Model depends on what was loaded into memory
     /* dynamic OM = Model.Root(); */
 
     // Object Models to be supported
