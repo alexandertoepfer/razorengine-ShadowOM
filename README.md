@@ -23,7 +23,7 @@ public abstract class Shadow {
 };
 ```
 
->Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/NKmRaP
+>Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/7Zwflo
 
 A template making use of the ShadowOM
 would look like this depending what model types it processes:
@@ -35,30 +35,33 @@ string template = @""
         // Type of Asset depends on what was loaded into memory
         dynamic OM = Model.Root();
 
-        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        // Intellisense support, template with one model
-        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        Type1? type1OM = null;
+        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		// Examples with strong typed variable, Intellisense
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		Type1? t1OM = null;
+		
+		try {
+			t1OM = Model.To<Type1>();
+		} catch (InvalidCastException) {
+			// Could be that Model is Type2
+			// model.To<Type2>();
+			return;
+		}
+		
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		// Examples with strong typed variable, both models, Intellisense
+		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+		
+		// Get strong typed objects from model
+		var nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
 
-        try {
-            type1OM = Model.To<Type1>();
-        } catch (InvalidCastException) {
-            // Type not supported, could be that Model is Type2
-            // model.To<Type2>();
-        }
-
-        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        // Intellisense support, template with multiple models
-        // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-        Type1? type1OM = null;
-        Type2? type2OM = null;
-
-        // Get strong typed objects from model
-        var nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
-
-        // Assign model
-        type1OM = nvdModelSet[""Type1""];
-        type2OM = nvdModelSet[""Type2""];
+		// Assign model
+		Type1? t1OM = nvdModelSet["Type1"];
+		Type2? t2OM = nvdModelSet["Type2"];
+		
+		if (new List<dynamic>{})
+			// Could be that Model is Type1
+			return;
     }
     <!--
     @@file @(OM.Prefix)_@(OM.Name)_Info.log
