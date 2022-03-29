@@ -148,7 +148,7 @@ public class Program {
 		try {
 			t1OM = model.To<Type1>();
 		} catch (InvalidCastException) {
-			// Could be that Model is Type2
+			// Can not be cast to Type1
 			// model.To<Type2>();
 			return;
 		}
@@ -166,13 +166,13 @@ public class Program {
 		Type2? t2OM = nvdModelSet["Type2"];
 		
 		if ((new List<dynamic?> { t1OM2, t2OM }).All(x => (x == null)))
-			// Could be that Model is neither Type1, Type2
+			// Can not be cast to neither Type1, Type2
 			return;
 		
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Given values from the specifications as expected :)
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		if (t1OM != null) {
+		if (t1OM.Is(typeof(Type1)) && t1OM != null) {
 			Console.WriteLine($@"
 			<!--
 				@file {t1OM.Prefix}_{t1OM.Name}_Info.log
@@ -181,7 +181,7 @@ public class Program {
 			-->
 			");
 		}
-		if (t2OM != null) {
+		if (t2OM.Is(typeof(Type2)) && t2OM != null) {
 			Console.WriteLine($@"
 			<!--
 				@file {t2OM.Prefix}_{t2OM.Name}_Info.log
