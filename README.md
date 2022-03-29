@@ -36,9 +36,13 @@ string template = @""
 	@{
 		// Type of Asset depends on what was loaded into memory
 		dynamic OM = Model.Root();
+		
+		// Object Models to be supported
+		Type type1 = typeof(Type1);
+		Type type2 = typeof(Type2);
 
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		// Examples with strong typed variable, Intellisense
+		// Example with strong typed Object Model, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		Type1? t1OM = null;
 
@@ -51,19 +55,19 @@ string template = @""
 		}
 
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		// Examples with strong typed variable, both models, Intellisense
+		// Example with strong typed Object Model for both types, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 		// Get strong typed objects from model
-		var nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
+		var nvdModelSet = Model.In(new [] { type1, type2 });
 
 		if (nvdModelSet.All(x => (x.Value == null)))
 			// Can not be cast to neither Type1, Type2
 			return;
 
 		// Assign models
-		t1OM = nvdModelSet[typeof(Type1)];
-		Type2? t2OM = nvdModelSet[typeof(Type2)];
+		t1OM = nvdModelSet[type1];
+		Type2? t2OM = nvdModelSet[type2];
 
 		// Assign models
 		List<dynamic> models = nvdModelSet.Values.ToList();
@@ -75,12 +79,12 @@ string template = @""
 		Warning! This is a generated file. Manual changes will be omitted.
 	}*/
 	@* Template for both models *@
-	@if (Model.Is(typeof(Type1)) && t1OM != null) {
+	@if (Model.Is(type1) && t1OM != null) {
 		@@file {t1OM.Prefix}_{t1OM.Name}_Info.log
 		@@brief This file contains general information.
 		Warning! This is a generated file. Manual changes will be omitted.
 	}
-	@if (Model.Is(typeof(Type2)) && t2OM != null) {
+	@if (Model.Is(type2) && t2OM != null) {
 		@@file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
 		@@brief This file contains general information.
 		Warning! This is a generated file. Manual changes will be omitted.
