@@ -97,8 +97,8 @@ string template = @""
       @@file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
       @@brief This file contains general information.
       Warning! This is a generated file. Manual changes will be omitted.
-      "";
-      @res
+    "";
+    @res
   }
 "";
 ```
