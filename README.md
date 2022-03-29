@@ -84,7 +84,7 @@ string template = @""
     Type2? t2OM = nvdModelSet[type2];
   }
   @* Template for both models *@
-  @switch (Model.type()) {
+  @switch (Model.Type()) {
     case nameof(Type1):
       var res = $@""
         @file {t1OM.Prefix}_{t1OM.Name}_Info.log
