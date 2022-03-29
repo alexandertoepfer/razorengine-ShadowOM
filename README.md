@@ -115,7 +115,6 @@ string template = @""
       }
     break;
   }
-
   @if (Model.Is(type2) && t2OM != null) {
     var res = $@""
       @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
@@ -124,7 +123,6 @@ string template = @""
     "";
     @res
   }
-  @*  *@
 "";
 ```
 >Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/keixGq
