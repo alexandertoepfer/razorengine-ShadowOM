@@ -40,24 +40,22 @@ string template = @""
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Examples with strong typed variable, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		var model = shadows[0]; // Example Model
 		Type1? t1OM = null;
 
 		try {
-			t1OM = model.To<Type1>();
+			t1OM = Model.To<Type1>();
 		} catch (InvalidCastException) {
 			// Can not be cast to Type1
-			// model.To<Type2>();
+			// Model.To<Type2>();
 			return;
 		}
 
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Examples with strong typed variable, both models, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		model = shadows[1]; // Example Model
 
 		// Get strong typed objects from model
-		var nvdModelSet = model.In(new [] { typeof(Type1), typeof(Type2) });
+		var nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
 
 		if (nvdModelSet.All(x => (x.Value == null)))
 			// Can not be cast to neither Type1, Type2
@@ -71,12 +69,12 @@ string template = @""
 		List<dynamic> models = nvdModelSet.Values.ToList();
 	}
 	@* Template for both models *@
-	@if (t1OM.Is(typeof(Type1)) && t1OM != null /* && models[0] != null */) {
+	@if (Model.Is(typeof(Type1)) && t1OM != null /* && models[0] != null */) {
 		@@file {t1OM.Prefix}_{t1OM.Name}_Info.log
 		@@brief This file contains general information.
 		Warning! This is a generated file. Manual changes will be omitted.
 	}
-	@if (t2OM.Is(typeof(Type2)) && t2OM != null /* && models[1] != null */) {
+	@if (Model.Is(typeof(Type2)) && t2OM != null /* && models[1] != null */) {
 		@@file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
 		@@brief This file contains general information.
 		Warning! This is a generated file. Manual changes will be omitted.
