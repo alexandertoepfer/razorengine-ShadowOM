@@ -1,6 +1,7 @@
 # RazorEngine - ShadowOM
 Proposal to optimise RazorEngine compilation of templates with multiple OMs
 through introduction of a hidden Shadow OM similar to how Mozilla solved this problem in Web Components.
+>Inspired by https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM
 ```csharp
 foreach(var type in new [] { typeof(Type1), typeof(Type2) }) {
     Engine.Razor.Compile(template, "templateKey", type);
