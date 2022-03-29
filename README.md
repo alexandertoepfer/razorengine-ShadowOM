@@ -20,6 +20,7 @@ public abstract class Shadow {
   public dynamic Root(); // returns the original object.
   public T To<T>(); // returns the original object as type T. throws InvalidCastException
   public bool Is(Type type); // type checking.
+  public String Type(); // returns the original object type as String.
   public NullValueDictionary<Type, dynamic> In(Type[] list); // returns collection with matching type.
   public bool HasProperty(String prop); // returns whether a property exists.
 };
