@@ -40,24 +40,24 @@ public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class where 
 }
 
 // This will be used for dynamic cast redirection to recover classes, it's replacing the
-// missing ObjectModel class without affecting the XML structure of <equipmentPhase>, <equipmentModule>, etc.
-// It's basically a type recovery strategy in place to make compilation faster ;)
-// The idea is to squash objects in memory into a hidden Shadow OM for faster compilation
+// missing ObjectModel class without affecting the XML structure of <Type1>, <Type2>, etc.
+// It's basically a type recovery strategy in place to make compilation faster.
+// The idea is to squash objects in memory into a hidden ShadowOM for faster compilation
 // while being able to easily retrieve the original during runtime of templates.
 public abstract class Shadow {
-	protected abstract Type AssetType { get; }
+	protected abstract Type ModelType { get; }
 	
 	// This method returns the type as String.
-	public String Type() => AssetType.Name;
+	public String Type() => ModelType.Name;
 	
 	// This method returns the original object.
-	public dynamic Root() => Convert.ChangeType(this, AssetType);
+	public dynamic Root() => Convert.ChangeType(this, ModelType);
 	
 	// This method returns the original object as type T.
 	public T To<T>() => (T) Convert.ChangeType(this, typeof(T));
 	
 	// This method can be used for type checking.
-	public bool Is(Type type) => type == AssetType;
+	public bool Is(Type type) => (type == ModelType);
 	
 	// This method takes a list of model types and populates the matching type.
 	public NullValueDictionary<String, dynamic> In(Type[] list) {
@@ -68,32 +68,37 @@ public abstract class Shadow {
 		results.Add(item.Name, instance);
 		return results;
 	}
+	
+	// This method can test whether a property exists
+	public bool HasProperty(String prop) {
+    	return (this.GetType().GetProperty(prop) != null);
+	}
 };
 
 // Current Asset classes with their recovery type implemented for the Shadow OM,
 // the templates can easily retrieve the root again with this information, as highlighted below.
-public class EquipmentPhase : Shadow {
-	sealed protected override Type AssetType { get; } = typeof(EquipmentPhase);
-	public string TypeIdentifier { get; } = "PH";
+public class Type1 : Shadow {
+	sealed protected override Type ModelType { get; } = typeof(Type1);
+	public string Prefix { get; } = "1";
 	public string? Name { get; init; }
 	
 };
-public class EquipmentModule : Shadow {
-	sealed protected override Type AssetType { get; } = typeof(EquipmentModule);
-	public string TypeIdentifier { get; } = "EM";
+public class Type2 : Shadow {
+	sealed protected override Type ModelType { get; } = typeof(Type2);
+	public string Prefix { get; } = "2";
 	public string? Name { get; init; }
-	
+	public string? Suffix { get; init; }
 };
 
 // Proof of concept for Shadow OM class
 public class Program {
 	public static void Main() {
 		// The usual ObjectModels from the XML into the classes
-		var ph = new EquipmentPhase { Name = "AdjustPHAcid" };
-		var em = new EquipmentModule { Name = "ControlDoV001" };
+		var t1 = new Type1 { Name = "Type1" };
+		var t2 = new Type2 { Name = "Type2", Suffix = "Ext" };
 		
 		// The generic compilation type used for razor, alias the models
-		Shadow[] shadows = new [] { (ph as Shadow), (em as Shadow) };
+		Shadow[] shadows = new [] { (t1 as Shadow), (t2 as Shadow) };
 		
 		// The root objects which have been specified originally
 		List<dynamic> roots = shadows.Select(m => m.Root()).ToList();
@@ -104,14 +109,14 @@ public class Program {
 		var template = "";
 		
 		// Usual required calls to Razor with a template supporting both asset types without Shadow
-		Engine.Razor.Compile(template, "templateKey", typeof(EquipmentModule));
-		Engine.Razor.Compile(template, "templateKey", typeof(EquipmentPhase));
+		Engine.Razor.Compile(template, "templateKey", typeof(Type1));
+		Engine.Razor.Compile(template, "templateKey", typeof(Type2));
 		
 		// Compilation of the same template with a generic shadow object model which works with any asset type
-		var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), ph);
+		var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), t1);
 		
 		// Proof that asset is fully recoverable from Shadow
-		dynamic phRoot = roots[0], emRoot = roots[1];
+		dynamic t1Root = roots[0], t2Root = roots[1];
 		
 		// Given types from the specifications as expected
 		Console.WriteLine(types.Aggregate((i, j) => i + "," + j));
@@ -121,15 +126,15 @@ public class Program {
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		Console.WriteLine($@"
 		<!--
-			@file {phRoot.TypeIdentifier}_{phRoot.Name}_Info.log
-			@brief This file contains general information about the asset.
+			@file {t1Root.Prefix}_{t1Root.Name}_{(t1Root.HasProperty("Suffix") ? t1Root.Suffix : "")}Info.log
+			@brief This file contains general information.
 			Warning! This is a generated file. Manual changes will be omitted.
 		-->
 		");
 		Console.WriteLine($@"
 		<!--
-			@file {emRoot.TypeIdentifier}_{emRoot.Name}_Info.log
-			@brief This file contains general information about the asset.
+			@file {t2Root.Prefix}_{t2Root.Name}_{(t2Root.HasProperty("Suffix") ? t2Root.Suffix + "_" : "")}Info.log
+			@brief This file contains general information.
 			Warning! This is a generated file. Manual changes will be omitted.
 		-->
 		");
@@ -138,13 +143,14 @@ public class Program {
 		// Examples with strong typed variable, Intellisense
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		var model = shadows[0]; // Example Model
-		EquipmentPhase? phAsset = null;
+		Type1? t1OM = null;
 		
 		try {
-			phAsset = model.To<EquipmentPhase>();
+			t1OM = model.To<Type1>();
 		} catch (InvalidCastException) {
-			// Type not supported, could be that Model is EquipmentModule
-			// model.To<EquipmentModule>();
+			// Could be that Model is Type2
+			// model.To<Type2>();
+			return;
 		}
 		
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -153,29 +159,37 @@ public class Program {
 		model = shadows[1]; // Example Model
 		
 		// Get strong typed objects from model
-		var nvdModelSet = model.In(new [] { typeof(EquipmentPhase), typeof(EquipmentModule) });
+		var nvdModelSet = model.In(new [] { typeof(Type1), typeof(Type2) });
 
 		// Assign model
-		//EquipmentPhase? phAsset = nvdModelSet["EquipmentPhase"];
-		EquipmentModule? emAsset = nvdModelSet["EquipmentModule"];
+		Type1? t1OM2 = nvdModelSet["Type1"];
+		Type2? t2OM = nvdModelSet["Type2"];
+		
+		if ((new List<dynamic?> { t1OM2, t2OM }).All(x => (x == null)))
+			// Could be that Model is neither Type1, Type2
+			return;
 		
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		// Given values from the specifications as expected :)
 		// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		Console.WriteLine($@"
-		<!--
-			@file {phAsset.TypeIdentifier}_{phAsset.Name}_Info.log
-			@brief This file contains general information about the asset.
-			Warning! This is a generated file. Manual changes will be omitted.
-		-->
-		");
-		Console.WriteLine($@"
-		<!--
-			@file {emAsset.TypeIdentifier}_{emAsset.Name}_Info.log
-			@brief This file contains general information about the asset.
-			Warning! This is a generated file. Manual changes will be omitted.
-		-->
-		");
+		if (t1OM != null) {
+			Console.WriteLine($@"
+			<!--
+				@file {t1OM.Prefix}_{t1OM.Name}_Info.log
+				@brief This file contains general information.
+				Warning! This is a generated file. Manual changes will be omitted.
+			-->
+			");
+		}
+		if (t2OM != null) {
+			Console.WriteLine($@"
+			<!--
+				@file {t2OM.Prefix}_{t2OM.Name}_Info.log
+				@brief This file contains general information.
+				Warning! This is a generated file. Manual changes will be omitted.
+			-->
+			");	
+		}
 	}
 }
 
