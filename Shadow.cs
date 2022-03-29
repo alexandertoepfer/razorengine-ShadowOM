@@ -13,20 +13,6 @@ using System.Linq;
 // Inspired by Web Components Shadow DOM Encapsulation
 // Resources => https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM
 
-// Dummy class to highlight usage in main
-public static class Engine {
-  public static class Razor {
-    public static object? RunCompile(string template,
-                                     string templateKey,
-                                     Type modelType,
-                                     object objectModel) => null;
-
-    public static object? Compile(string template,
-                                  string templateKey,
-                                  Type modelType) => null;
-  };
-};
-
 // NullValueDictionary class to directly assign nullables after look-up and 
 // avoid stuff like Dict.ContainsKey(...)? Dict[...] : null and KeyNotFoundException
 // when we want to have null entries for not populated OMs.
@@ -91,8 +77,8 @@ public class Type2 : Shadow {
 public class Program {
   public static void Main() {
     // The usual ObjectModels from the XML into the classes
-    var t1 = new Type1 { Name = "Type1" };
-    var t2 = new Type2 { Name = "Type2", Suffix = "Ext" };
+    var t1 = new Type1 { Name = "Name1" };
+    var t2 = new Type2 { Name = "Name2", Suffix = "Ext" };
 
     // The generic compilation type used for razor, alias the models
     Shadow[] shadows = new [] { (t1 as Shadow), (t2 as Shadow) };
@@ -102,22 +88,15 @@ public class Program {
 
     // The root classes of the specifications
     var types = shadows.Select(m => m.Type());
+	var names = roots.Select(m => m.Name);
 
-    var template = "";
-
-    // Usual required calls to Razor with a template supporting both asset types without Shadow
-    Engine.Razor.Compile(template, "templateKey", typeof(Type1));
-    Engine.Razor.Compile(template, "templateKey", typeof(Type2));
-
-    // Compilation of the same template with a generic shadow object model which works with any asset type
-    var result = Engine.Razor.RunCompile(template, "templateKey", typeof(Shadow), t1);
-
-    // Proof that asset is fully recoverable from Shadow
+    // Proof that information is fully recoverable from Shadow
     dynamic t1Root = roots[0], t2Root = roots[1];
 
     // Given types from the specifications as expected
     Console.WriteLine(types.Aggregate((i, j) => i + "," + j));
-
+	Console.WriteLine(names.Aggregate((i, j) => i + "," + j));
+	  
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     // Given values from the specifications as expected :)
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
