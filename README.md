@@ -25,6 +25,7 @@ public abstract class Shadow {
 };
 ```
 Old approach to template example with multiple OMs, notice that there is no type safety, the template takes any model of any type (that was compiled) and therefore Intellisense does not work, the only reasonable way is checking an indicator property to figure out what type it could have been, but then again you'd have to half guess its properties...
+
 ```csharp
 string oldTemplate = @""
   @inherits Razor.TemplateBase<dynamic>
@@ -41,7 +42,8 @@ string oldTemplate = @""
   }
 "";
 ```
->Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/WynRCd
+
+New approach:
 ```csharp
 string template = @""
   @inherits Razor.TemplateBase<Shadow>
@@ -103,3 +105,4 @@ string template = @""
   }
 "";
 ```
+>Take a look into <code>Shadow.cs</code> to see how this was accomplished and to run the code visit https://dotnetfiddle.net/WynRCd
