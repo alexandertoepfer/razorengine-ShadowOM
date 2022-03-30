@@ -79,6 +79,7 @@ string template = @""
       nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
     } catch(InvalidCastException) {
       // Can not be cast to neither Type1, Type2
+      // Model.To<Type3>();
       return;
     }
 
