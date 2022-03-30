@@ -17,7 +17,7 @@ using System.Linq;
 // avoid stuff like Dict.ContainsKey(...)? Dict[...] : null and KeyNotFoundException
 // when we want to have null entries for not populated OMs.
 public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class
-	                                                  where T : notnull {
+	                                                      where T : notnull {
   new public U? this[T key] {
     get {
       this.TryGetValue(key, out var val);
@@ -55,8 +55,14 @@ public abstract class ShadowOM {
 	  new NullValueDictionary<Type, dynamic> {{
 		  list.Where(x => Is(x)).Single(), 
 		  new Func<dynamic>(() => {
+			  var root = this.Root();
+			  var properties = root.GetType().GetProperties();
 			  var instance = Activator.CreateInstance(list.Where(x => Is(x)).Single());
-			  instance = this.Root();
+			  var writeReadProps = ((IEnumerable<dynamic>)properties).Where(prop => prop.CanRead && prop.CanWrite);
+			  foreach (var prop in writeReadProps) {
+				  object copyValue = prop.GetValue(root);
+				  prop.SetValue(instance, copyValue);
+			  }
 			  return instance;
 		  }).Invoke()
 	  }};
@@ -91,14 +97,14 @@ public class Program {
 
     // The root classes of the specifications
     var types = shadows.Select(m => m.Type());
-    var names = roots.Select(m => m.Name);
+	var names = roots.Select(m => m.Name);
 
     // Proof that information is fully recoverable from Shadow
     dynamic t1Root = roots[0], t2Root = roots[1];
 
     // Given types from the specifications as expected
     Console.WriteLine(types.Aggregate((i, j) => i + "," + j));
-    Console.WriteLine(names.Aggregate((i, j) => i + "," + j));
+	Console.WriteLine(names.Aggregate((i, j) => i + "," + j));
 	  
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     // Given values from the specifications as expected :)
@@ -143,7 +149,7 @@ public class Program {
     // Get strong typed objects from model
     var nvdModelSet = model2.In(new [] { type1, type2 });
 
-    if (!nvdModelSet.Values.Any(x => x != null)) // nvdModelSet.Values.All(x => x == null)
+    if (!nvdModelSet.Values.Any(x => x != null))
       // Can not be cast to neither Type1, Type2
       return;
 
