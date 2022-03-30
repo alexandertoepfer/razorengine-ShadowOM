@@ -76,7 +76,7 @@ string template = @""
     // Get strong typed objects from model
     var nvdModelSet = Model.In(new [] { type1, type2 });
 
-    if (!nvdModelSet.Values.Any(x => x != null))
+    if (!nvdModelSet.Values.Any(x => x != null)) // nvdModelSet.Values.All(x => x == null)
       // Can not be cast to neither Type1, Type2
       return;
 
