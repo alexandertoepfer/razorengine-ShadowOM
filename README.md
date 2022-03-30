@@ -57,9 +57,6 @@ string template = @""
     // Type of Model depends on what was loaded into memory
     /* dynamic OM = Model.Root(); */
 
-    // Object Models to be supported
-    Type type1 = typeof(Type1), type2 = typeof(Type2);
-
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     // Intellisense example with one model
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -76,15 +73,15 @@ string template = @""
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     // Intellisense example with both models
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    var nvdModelSet = Model.In(new [] { type1, type2 });
+    var nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
 
     if (!nvdModelSet.Values.Any(x => x != null)) // nvdModelSet.Values.All(x => x == null)
       // Can not be cast to neither Type1, Type2
       return;
 
     // Assign models
-    Type1? t1OM = nvdModelSet[type1];
-    Type2? t2OM = nvdModelSet[type2];
+    Type1? t1OM = nvdModelSet[typeof(Type1)];
+    Type2? t2OM = nvdModelSet[typeof(Type2)];
   }
   @* Old approach with dynamic *@
   /*@if (OM != null) {
@@ -117,7 +114,7 @@ string template = @""
       }
     break;
   }
-  @if (Model.Is(type2) && t2OM != null) {
+  @if (Model.Is(typeof(Type2)) && t2OM != null) {
     var res = $@""
       @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
       @brief This file contains general information.
