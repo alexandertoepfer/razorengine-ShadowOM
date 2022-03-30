@@ -87,7 +87,8 @@ string template = @""
     Type1? t1OM = nvdModelSet[typeof(Type1)];
     Type2? t2OM = nvdModelSet[typeof(Type2)];
   }
-  @* Old approach with dynamic *@
+  
+  @* Old template with dynamic *@
   /*@if (OM != null) {
     var res = $@""
       @file {OM.Prefix}_{OM.Name}_{(OM.Has("Suffix") ? OM.Suffix + "_" : "")}Info.log
@@ -96,6 +97,7 @@ string template = @""
     "";
     @res
   }*/
+  
   @* Template for both models *@
   @switch (Model.Type()) {
     case nameof(Type1):
