@@ -145,17 +145,19 @@ public class Program {
     // Intellisense example with both models
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     var model2 = shadows[1]; // Example Model
+    dynamic? nvdModelSet = null;
 
-    // Get strong typed objects from model
-    var nvdModelSet = model2.In(new [] { type1, type2 });
-
-    if (!nvdModelSet.Values.Any(x => x != null))
+    try {
+      nvdModelSet = model2.In(new [] { typeof(Type1), typeof(Type2) });
+    } catch(InvalidCastException) {
       // Can not be cast to neither Type1, Type2
+      // Model.To<Type3>();
       return;
+    }
 
-    // Intellisense
-    //Type1? t1OM = nvdModelSet[type1];
-    Type2? t2OM = nvdModelSet[type2];
+    // Assign models
+    //Type1? t1OM = nvdModelSet[typeof(Type1)];
+    Type2? t2OM = nvdModelSet[typeof(Type2)];
 
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     // Given values from the specifications as expected
