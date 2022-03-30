@@ -51,14 +51,15 @@ public abstract class ShadowOM {
   public bool Has(String prop) => this.GetType().GetProperty(prop) != null;
   
   // This method takes a list of model types and populates the matching type.
-  public NullValueDictionary<Type, dynamic> In(Type[] list) {
-    var results = new NullValueDictionary<Type, dynamic>();
-    var item = list.Where(x => Is(x)).Single();
-    var instance = Activator.CreateInstance(item);
-    instance = this.Root();
-    results.Add(item, instance);
-    return results;
-  }
+  public NullValueDictionary<Type, dynamic> In(Type[] list) => 
+	  new NullValueDictionary<Type, dynamic> {{
+		  list.Where(x => Is(x)).Single(), 
+		  new Func<dynamic>(() => {
+			  var instance = Activator.CreateInstance(list.Where(x => Is(x)).Single());
+			  instance = this.Root();
+			  return instance;
+		  }).Invoke()
+	  }};
 };
 
 // Current Asset classes with their recovery type implemented for the Shadow OM,
@@ -176,7 +177,8 @@ public class Program {
           ");
         }
       break;
-    }				  
+    }
+					  
     if (model2.Is(type2) && t2OM != null) {
       Console.WriteLine($@"
         <!--
