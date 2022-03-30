@@ -159,7 +159,6 @@ public class Program {
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     // Given values from the specifications as expected
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-		
     switch (model1.Type()) {
       case nameof(Type1):
         Console.WriteLine($@"
@@ -172,19 +171,17 @@ public class Program {
       break;
 
       case nameof(Type2):
-        if (t2OM != null) {
-          Console.WriteLine($@"
-            <!--
-            @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
-            @brief This file contains general information.
-            Warning! This is a generated file. Manual changes will be omitted.
-            -->
-          ");
-        }
+        Console.WriteLine($@"
+          <!--
+          @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
+          @brief This file contains general information.
+          Warning! This is a generated file. Manual changes will be omitted.
+          -->
+        ");
       break;
     }
 					  
-    if (model2.Is(type2) && t2OM != null) {
+    if (model2.Is(type2)) {
       Console.WriteLine($@"
         <!--
         @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
