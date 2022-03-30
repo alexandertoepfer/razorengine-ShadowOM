@@ -181,7 +181,7 @@ public class Program {
       break;
     }
 					  
-    if (model2.Is(type2)) {
+    if (model2.Is(typeof(Type2))) {
       Console.WriteLine($@"
         <!--
         @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
