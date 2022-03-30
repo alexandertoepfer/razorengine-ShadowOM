@@ -108,14 +108,12 @@ string template = @""
     break;
     
     case nameof(Type2):
-      if (t2OM != null) {
-        var res = $@""
-          @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
-          @brief This file contains general information.
-          Warning! This is a generated file. Manual changes will be omitted.
-        "";
-        @res
-      }
+      var res = $@""
+        @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
+        @brief This file contains general information.
+        Warning! This is a generated file. Manual changes will be omitted.
+      "";
+      @res
     break;
   }
   @if (Model.Is(typeof(Type2)) && t2OM != null) {
