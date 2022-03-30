@@ -73,7 +73,7 @@ string template = @""
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     // Intellisense example with both models
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    NullValueDictionary<Type, dynamic> nvdModelSet = null;
+    dynamic? nvdModelSet = null;
 
     try {
       nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
