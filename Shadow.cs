@@ -66,7 +66,7 @@ public abstract class ShadowOM {
 			  }
 			  return instance;
 		  }).Invoke()
-	  }} : new NullValueDictionary<Type, dynamic>();
+	  }} : throw new InvalidCastException();
 };
 
 // Current Classes with their recovery type implemented for the Shadow OM,
