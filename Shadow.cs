@@ -69,7 +69,7 @@ public abstract class ShadowOM {
 	  }} : new NullValueDictionary<Type, dynamic>();
 };
 
-// Current Asset classes with their recovery type implemented for the Shadow OM,
+// Current Classes with their recovery type implemented for the Shadow OM,
 // the templates can easily retrieve the root again with this information, as highlighted below.
 public class Type1 : ShadowOM {
   sealed protected override Type ModelType { get; } = typeof(Type1);
@@ -83,7 +83,6 @@ public class Type2 : ShadowOM {
   public string? Suffix { get; init; }
 };
 
-// Proof of concept for Shadow OM class
 public class Program {
   public static void Main() {
     // The usual ObjectModels from the XML into the classes
@@ -108,7 +107,7 @@ public class Program {
     Console.WriteLine(names.Aggregate((i, j) => i + "," + j));
 	  
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    // Given values from the specifications as expected :)
+    // Given values from the specifications as expected
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     Console.WriteLine($@"
       <!--
@@ -129,7 +128,7 @@ public class Program {
     Type type1 = typeof(Type1), type2 = typeof(Type2);
 
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    // Examples with strong typed variable, Intellisense
+    // Intellisense example with one model
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     var model1 = shadows[0]; // Example Model
     Type1? t1OM = null;
@@ -143,7 +142,7 @@ public class Program {
     }
 
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    // Examples with strong typed variable, both models, Intellisense
+    // Intellisense example with both models
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     var model2 = shadows[1]; // Example Model
 
@@ -159,7 +158,7 @@ public class Program {
     Type2? t2OM = nvdModelSet[type2];
 
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    // Given values from the specifications as expected :)
+    // Given values from the specifications as expected
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 		
     switch (model1.Type()) {
