@@ -73,11 +73,14 @@ string template = @""
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     // Intellisense example with both models
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    var nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
+    NullValueDictionary<Type, dynamic> nvdModelSet = null;
 
-    if (!nvdModelSet.Values.Any(x => x != null)) // nvdModelSet.Values.All(x => x == null)
+    try {
+      nvdModelSet = Model.In(new [] { typeof(Type1), typeof(Type2) });
+    } catch(InvalidCastException) {
       // Can not be cast to neither Type1, Type2
       return;
+    }
 
     // Assign models
     Type1? t1OM = nvdModelSet[typeof(Type1)];
