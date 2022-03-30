@@ -52,6 +52,7 @@ public abstract class ShadowOM {
   
   // This method takes a list of model types and populates the matching type.
   public NullValueDictionary<Type, dynamic> In(Type[] list) => 
+	  list.Where(x => Is(x)).ToList().Any() ? 
 	  new NullValueDictionary<Type, dynamic> {{
 		  list.Where(x => Is(x)).Single(), 
 		  new Func<dynamic>(() => {
@@ -65,7 +66,7 @@ public abstract class ShadowOM {
 			  }
 			  return instance;
 		  }).Invoke()
-	  }};
+	  }} : new NullValueDictionary<Type, dynamic>();
 };
 
 // Current Asset classes with their recovery type implemented for the Shadow OM,
