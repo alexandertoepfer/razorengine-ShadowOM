@@ -29,7 +29,7 @@ Old approach to template example with multiple OMs, notice that there is no type
 
 ```csharp
 string oldTemplate = @""
-  @inherits Razor.TemplateBase<dynamic>
+  @inherits Razor.TemplateBase<dynamic> // Type1 || Type2
   @using System;
   @{
     // Type of Model depends on what was loaded into memory
