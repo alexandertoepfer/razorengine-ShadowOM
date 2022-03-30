@@ -116,7 +116,7 @@ string template = @""
       @res
     break;
   }
-  @if (Model.Is(typeof(Type2)) && t2OM != null) {
+  @if (Model.Is(typeof(Type2))) {
     var res = $@""
       @file {t2OM.Prefix}_{t2OM.Name}_{t2OM.Suffix}_Info.log
       @brief This file contains general information.
