@@ -24,6 +24,14 @@ public abstract class ShadowOM {
   public NullValueDictionary<Type, dynamic> In(Type[] list); // returns collection with matching type.
   public bool Has(String prop); // returns whether a property exists.
 };
+
+public class Type1 : ShadowOM {
+  ...
+};
+
+public class Type2 : ShadowOM {
+  ...
+};
 ```
 Old approach to template example with multiple OMs, notice that there is no type safety, the template takes any model of any type (that was compiled) and therefore Intellisense does not work, the only reasonable way is checking an indicator property to figure out what type it could have been, but then again you'd have to half guess its properties...
 
