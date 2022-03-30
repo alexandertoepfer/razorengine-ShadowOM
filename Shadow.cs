@@ -146,7 +146,7 @@ public class Program {
 
     try {
       nvdModelSet = model2.In(new [] { typeof(Type1), typeof(Type2) });
-    } catch(InvalidCastException) {
+    } catch (InvalidCastException) {
       // Can not be cast to neither Type1, Type2
       // Model.To<Type3>();
       return;
