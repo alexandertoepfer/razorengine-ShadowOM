@@ -17,7 +17,7 @@ using System.Linq;
 // avoid stuff like Dict.ContainsKey(...)? Dict[...] : null and KeyNotFoundException
 // when we want to have null entries for not populated OMs.
 public class NullValueDictionary<T, U> : Dictionary<T, U> where U : class
-	                                                      where T : notnull {
+	                                                  where T : notnull {
   new public U? this[T key] {
     get {
       this.TryGetValue(key, out var val);
@@ -97,14 +97,14 @@ public class Program {
 
     // The root classes of the specifications
     var types = shadows.Select(m => m.Type());
-	var names = roots.Select(m => m.Name);
+    var names = roots.Select(m => m.Name);
 
     // Proof that information is fully recoverable from Shadow
     dynamic t1Root = roots[0], t2Root = roots[1];
 
     // Given types from the specifications as expected
     Console.WriteLine(types.Aggregate((i, j) => i + "," + j));
-	Console.WriteLine(names.Aggregate((i, j) => i + "," + j));
+    Console.WriteLine(names.Aggregate((i, j) => i + "," + j));
 	  
     // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     // Given values from the specifications as expected :)
