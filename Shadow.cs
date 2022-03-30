@@ -52,21 +52,21 @@ public abstract class ShadowOM {
   
   // This method takes a list of model types and populates the matching type.
   public NullValueDictionary<Type, dynamic> In(Type[] list) => 
-	  list.Where(x => Is(x)).ToList().Any() ? 
-	  new NullValueDictionary<Type, dynamic> {{
-		  list.Where(x => Is(x)).Single(), 
-		  new Func<dynamic>(() => {
-			  var root = this.Root();
-			  var properties = root.GetType().GetProperties();
-			  var instance = Activator.CreateInstance(list.Where(x => Is(x)).Single());
-			  var writeReadProps = ((IEnumerable<dynamic>)properties).Where(prop => prop.CanRead && prop.CanWrite);
-			  foreach (var prop in writeReadProps) {
-				  object copyValue = prop.GetValue(root);
-				  prop.SetValue(instance, copyValue);
-			  }
-			  return instance;
-		  }).Invoke()
-	  }} : new NullValueDictionary<Type, dynamic>();
+    list.Where(x => Is(x)).ToList().Any() ? 
+      new NullValueDictionary<Type, dynamic> {{
+        list.Where(x => Is(x)).Single(), 
+        new Func<dynamic>(() => {
+          var root = this.Root();
+          var properties = root.GetType().GetProperties();
+          var instance = Activator.CreateInstance(list.Where(x => Is(x)).Single());
+          var writeReadProps = ((IEnumerable<dynamic>)properties).Where(prop => prop.CanRead && prop.CanWrite);
+          foreach (var prop in writeReadProps) {
+            object copyValue = prop.GetValue(root);
+            prop.SetValue(instance, copyValue);
+          }
+          return instance;
+        }).Invoke()
+        }} : new NullValueDictionary<Type, dynamic>();
 };
 
 // Current Classes with their recovery type implemented for the Shadow OM,
